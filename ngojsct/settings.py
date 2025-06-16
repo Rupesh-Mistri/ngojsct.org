@@ -104,9 +104,9 @@ else:
             'ENGINE': 'django.db.backends.mysql',
             'HOST':'127.0.0.1',
             'PORT':'3306',
-            'USER':'thenews3_ngojsct_mlm',
-            'PASSWORD':'*~to!NH?rh&,',
-            'NAME': 'thenews3_ngojsct_mlm',
+            'USER':'aidigimi_ngojsct_org',
+            'PASSWORD':'h!pN+4]5*aMO',
+            'NAME': 'aidigimi_ngojsct_org',
         }
     }
 
