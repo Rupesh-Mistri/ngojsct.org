@@ -1,0 +1,122 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <title>Registration</title>
+    <style>
+      body {
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        font-family: Arial, sans-serif;
+      }
+      .login-card {
+        width: 100%;
+        max-width: 400px;
+        background: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        border: none;
+      }
+      .login-card h3 {
+        font-weight: 600;
+        margin-bottom: 20px;
+        text-align: center;
+        color: #4b4b4b;
+      }
+      .btn-primary {
+        background-color: #6a11cb;
+        border-color: #6a11cb;
+        transition: all 0.3s;
+      }
+      .btn-primary:hover {
+        background-color: #2575fc;
+        border-color: #2575fc;
+      }
+      .text-muted {
+        color: #6c757d !important;
+      }
+      .text-muted:hover {
+        color: #2575fc !important;
+      }
+    </style>
+  </head>
+  <body>
+     {% for message in messages %} 
+    
+    <div class="alert {% if message.tags == 'success' %} alert-success {% elif message.tags == 'error' %}  alert-danger  {% elif message.tags == 'info' %} alert alert-info  {% elif message.tags == 'warning' %} alert-warning {% endif %} alert-dismissible text-center elpuru_alert_desapp" 
+        role="alert" 
+        style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 1050; width: 50%;" 
+        id="alertm"
+        >
+        {{ message }}
+    </div>
+
+{% endfor %}
+
+<script>
+setTimeout(function() {
+    
+    var alerts = document.getElementsByClassName('elpuru_alert_desapp');
+    
+    // Loop through each alert and fade it out
+    for (var i = 0; i < alerts.length; i++) {
+        var alert = alerts[i];
+        alert.style.opacity = 0; 
+        alert.classList.remove('show'); // Remove the 'show' class for Bootstrap fade-out effect
+        alert.classList.add('fade'); // Add the 'fade' class for smooth transition
+    }
+}, 5000); 
+</script>
+
+   <div class="login-card text-center">
+  <img src="{% static 'images/logo_rect.png' %}" alt="Logo" class="img-fluid mx-auto mb-3" style="max-height: 150px;">
+  <h3>Login</h3>
+  <form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="mb-3 text-start">
+        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+          <div class="text-danger small">{{ field.errors|join:", " }}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+    <div class="d-grid">
+      <button type="submit" class="btn btn-primary">Login</button>
+    </div>
+    <div class="text-center mt-3">
+      <a href="#" class="text-muted" style="text-decoration: none;">Forgot Password?</a>
+    </div>
+    <div class="text-center mt-3">
+      <a href="/register" class="text-muted" style="text-decoration: none;">Register</a>
+    </div>
+  </form>
+</div>
+
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script>
+      // Enable Bootstrap popovers
+      document.addEventListener('DOMContentLoaded', function () {
+        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+        var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+          return new bootstrap.Popover(popoverTriggerEl)
+        })
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,270 @@
+<html lang="en" dir="ltr">
+  <head>
+    <!-- META DATA -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Sash – Bootstrap 5 Admin &amp; Dashboard Template">
+    <meta name="author" content="Spruko Technologies Private Limited">
+    <meta name="keywords" content="admin, admin dashboard, admin panel, admin template, bootstrap, clean, dashboard, flat, jquery, modern, responsive, premium admin templates, responsive admin, ui, ui kit.">
+
+    <!-- FAVICON -->
+    <link rel="shortcut icon" type="image/x-icon" href="/static/assets/images/brand/favicon.ico">
+    <!-- TITLE -->
+    <title>Registration</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+      /* Custom styles for the registration page */
+     body {
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+        height: 100vh;
+        {% comment %} display: flex;
+        justify-content: center;
+        align-items: center; {% endcomment %}
+        margin: 0;
+        font-family: Arial, sans-serif;
+      }
+
+      .container {
+        max-width: 600px;
+        margin-top: 50px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+      }
+
+      h3 {
+        font-weight: bold;
+        color: #343a40;
+        margin-bottom: 20px;
+      }
+
+      .header-brand-img {
+        height: 50px;
+        width: 50px;
+        margin-bottom: 30px;
+      }
+
+      .form-label {
+        font-weight: 500;
+        color:rgb(0, 0, 0);
+      }
+
+      .form-control {
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        box-shadow: none;
+        transition: border-color 0.3s ease;
+      }
+
+      .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
+      }
+
+      .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        font-size: 16px;
+        padding: 12px;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+      }
+
+      .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #004085;
+      }
+
+      .text-muted {
+        color: #6c757d;
+        text-decoration: none;
+      }
+
+      .text-muted:hover {
+        text-decoration: underline;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .popover {
+        max-width: 250px;
+        font-size: 14px;
+      }
+
+      .error-message {
+        color: #ed314c;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="text-center">
+        {% comment %} <h4><img src="/static/front/images/logo.png" width="150" alt="Logo" class="header-brand-img"></h4> {% endcomment %}
+        <h3>Registration</h3>
+      </div>
+
+      <div class="mt-4">
+        <form method="post">
+          {% csrf_token %}
+
+          <div class="row">
+            <!-- Loop through  form fields -->
+            {% for field in form %}
+            <div class="col-12 mb-3">
+              <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+              
+              {% if field.name == 'password1' %}
+              <i class="bi bi-info-circle"
+                data-bs-toggle="popover"
+                data-bs-html="true"
+                title="Password Requirements"
+                data-bs-content="
+                  <ul style='padding-left: 20px; margin: 0;'>
+                    <li>Your password can’t be too similar to your other personal information.</li>
+                    <li>Your password must contain at least 8 characters.</li>
+                    <li>Your password can’t be a commonly used password.</li>
+                    <li>Your password can’t be entirely numeric.</li>
+                  </ul>">
+              </i>
+              {% endif %}
+              
+              {{ field }}
+              
+              {% if field.errors %}
+              <div class="error-message small">{{ field.errors|join:", " }}</div>
+              {% endif %}
+            </div>
+            {% endfor %}
+
+
+          </div>
+
+          <!-- Submit button -->
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary">Register</button>
+          </div>
+
+          <!-- Forgot password link -->
+          <div class="text-center mt-3">
+            <a href="#" class="text-muted">Forgot Password?</a>
+            <a href="{% url 'login' %}" >Login</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <script>
+      // Enable Bootstrap popovers
+      document.addEventListener('DOMContentLoaded', function () {
+        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+        var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+          return new bootstrap.Popover(popoverTriggerEl);
+        });
+      });
+    </script>
+
+    <script>
+      id_city = document.getElementById("id_city");
+      id_city.innerHTML = '<option value="">Select</option>';
+
+      id_state = document.getElementById("id_state")
+      if (id_state) handleDropdownChange(id_state, 'id_city', '/cascade_ajax/', 'state')
+      function handleDropdownChange(parentElement, childId, endpoint, level) {
+        const parentValue = parentElement.value;
+      
+        if (parentValue !== '') {
+          const xhr = new XMLHttpRequest();
+          xhr.open('POST', endpoint, true);
+          xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      
+          const params = `level=${encodeURIComponent(level)}&value=${encodeURIComponent(parentValue)}&csrfmiddlewaretoken={{ csrf_token }}`;
+      
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+              if (xhr.status === 200) {
+                try {
+                  const data = JSON.parse(xhr.responseText);
+                  let options = '<option value="">Select</option>';
+                  for (const item of data) {
+                    options += `<option value="${item.name}">${item.name}</option>`;
+                  }
+                  document.getElementById(childId).innerHTML = options;
+      
+                 
+                } catch (e) {
+                  console.error('Error parsing response:', e);
+                }
+              } else {
+                console.error('Error fetching data:', xhr.status, xhr.statusText);
+              }
+            }
+          };
+      
+          xhr.send(params);
+        } else {
+          // Reset the child dropdown if the parent selection is empty
+          document.getElementById(childId).innerHTML = '<option value="">Select</option>';
+        }
+      }    
+    </script>
+     <script>
+      document.addEventListener("DOMContentLoaded", function () {
+          const sponsorIdInput = document.getElementById("id_sponserID");
+          const sponsorNameInput = document.getElementById("id_sponsorName");
+      
+          if (sponsorIdInput) {
+              sponsorIdInput.addEventListener("change", function () {
+                  const _href = "/get_sponser_name_ajax/";
+                  const code = this.value;
+      
+                  // Prepare the data payload
+                  const data = new URLSearchParams();
+                  data.append("csrfmiddlewaretoken", "{{ csrf_token }}");
+                  data.append("sponserID", code);
+      
+                  // Send the AJAX request
+                  fetch(_href, {
+                      method: "POST",
+                      headers: {
+                          "Content-Type": "application/x-www-form-urlencoded"
+                      },
+                      body: data
+                  })
+                      .then(response => response.json())
+                      .then(data => {
+                          //alert(data)
+                          console.log("Data found",);
+                          if (data.status === false) {
+                              alert(data.message);
+                              if (sponsorNameInput) {
+                                  sponsorNameInput.value = "";
+                              }
+                              return false;
+                          }
+                          if (data.status === true && sponsorNameInput) {
+                              sponsorNameInput.value = data.name;
+                          }
+                      })
+                      .catch(error => {
+                          console.error("Error:", error);
+                      });
+              });
+          }
+      });
+      
+  </script>
+  </body>
+</html>

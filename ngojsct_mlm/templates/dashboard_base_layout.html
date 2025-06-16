@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:'en' }}">
+    <head>
+        <meta charset="UTF-8">
+        <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="{{ csrf_token }}">
+        <title>{{current_url}}</title>
+        <link rel="shortcut icon" type="image/x-icon" href="{% static 'images/brand/logo32x32.png' %}" />
+
+        <link id="style" href="{% static 'plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
+
+        {% block head_part %}{% endblock %}
+        <!-- STYLE CSS -->
+        <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+        <link href="{% static 'css/dark-style.css' %}" rel="stylesheet" />
+        <link href="{% static 'css/transparent-style.css' %}" rel="stylesheet">
+        <link href="{% static 'css/skin-modes.css' %}" rel="stylesheet" />
+        <link href="{% static 'css/icons.css' %}" rel="stylesheet" />
+        {% comment %} <link rel="stylesheet" href="{% static 'css/toastr.min.css' %}"> {% endcomment %}
+        {% block page_css %}{% endblock %}
+    </head>
+
+    <body class="app sidebar-mini ltr light-mode">
+    <div id="global-loader">
+        <img src="{% static 'images/loader.svg' %}" class="loader-img" alt="Loader">
+    </div>
+
+    <div class="page">
+        <div class="page-main">
+
+            {% include 'dashboard_header.html' %}
+            {% include 'dashboard_sidebar.html' %}
+
+            <div class="main-content app-content mt-0">
+                <div class="side-app">
+
+                    {% block body %}{% endblock body %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {% block modal %}{% endblock %}
+    <a href="#top" id="back-to-top"><i class="fa fa-angle-up"></i></a>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap/js/popper.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+    {% block page_js %}{% endblock %}
+
+
+    {% comment %} {% include 'admin_footer.html' %} {% endcomment %}
+<footer class="footer">
+    <div class="container">
+        <div class="row align-items-center flex-row-reverse">
+            <div class="col-md-12 col-sm-12 text-center">
+                Copyright © <span id="year1">2021</span> <a href="javascript:void(0)"></a>. <a href="javascript:void(0)">
+                    {% comment %} {% if account.company_logo %}
+                        <img class="logo" src="{{ account.company_logo }}" alt="">
+                    {% else %}
+                        <h3 class="logotext">{{ account.company_name }}</h3>
+                    {% endif %} {% endcomment %}
+                    <h3 class="logotext">{{ COMPANY_NAME }}</h3>
+                </a> All rights reserved.
+            </div>
+        </div>
+    </div>
+</footer>
+
+</div>
+
+<script src="{% static 'js/sticky.js' %}"></script>
+<script src="{% static 'plugins/sidebar/sidebar.js' %}"></script>
+<script src="{% static 'plugins/p-scroll/perfect-scrollbar.js' %}"></script>
+<script src="{% static 'plugins/p-scroll/pscroll.js' %}"></script>
+<script src="{% static 'plugins/p-scroll/pscroll-1.js' %}"></script>
+<script src="{% static 'plugins/sidemenu/sidemenu.js' %}"></script>
+<script src="{% static 'js/flot.js' %}"></script>
+<script src="{% static 'js/index1.js' %}"></script>
+<script src="{% static 'js/themeColors.js' %}"></script>
+<script src="{% static 'js/custom.js' %}"></script>
+<script src="{% static 'js/toastr.min.js' %}"></script>
+{% comment %}  {% endcomment %}
+
+
+
+    {% block bottom_js %}{% endblock %}
+    {% if messages %}
+        {% for message in messages %}
+            <script type="text/javascript">
+                {% if message.tags == 'success' %}
+                    toastr.success("{{ message }}", { timeOut: "50000" });
+                {% elif message.tags == 'error' %}
+                    toastr.warning("{{ message }}", { timeOut: "50000" });
+                {% endif %}
+            </script>
+        {% endfor %}
+    {% endif %}
+    </body>
+</html>

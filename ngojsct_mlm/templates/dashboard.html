@@ -1,0 +1,191 @@
+{% extends "dashboard_base_layout.html" %}
+{% block head_part %}
+    <style>
+        .dashboard-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .dashboard-card h5 {
+            font-size: 1.25rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .dashboard-card span {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+    <script src=
+    "https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js">
+      </script>
+{% endblock head_part %}
+
+{% block body %}
+<div id="page-container" class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="dashboard-card">
+                <h5>Total Level Income</h5>
+                <span> {% if level_income %} {{ level_income }}{% else %}0{% endif %}</span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="dashboard-card">
+                <h5>Withdrew Balance</h5>
+                <span> {% if total_commission_withrew %} {{ total_commission_withrew }}{% else %}0{% endif %}</span>
+            </div>
+        </div>
+        <div class="col-md-4">
+          <div class="dashboard-card">
+              <h5>Total Balance</h5>
+              <span> {% if balance_calculation.total_balance %} {{ balance_calculation.total_balance }}{% else %}0{% endif %}</span>
+          </div>
+      </div>
+     
+       
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+          <div class="dashboard-card">
+              <h5>Position </h5>
+              <span>{% if member_dtl.rank %} {{ member_dtl.rank}}{% endif %}</span>
+
+              <h5>Position Income</h5>
+              <span>{% if member_dtl.rank %} {{ member_dtl.rank}}{% endif %}</span>
+          {% comment %} </div>
+      </div>
+      <div class="col-md-6">
+          <div class="dashboard-card">
+              <h5>Rank</h5>
+              <span>{% if member_dtl.rank %} {{ member_dtl.rank }}{% else %}0{% endif %}</span> {% endcomment %}
+          </div>
+      </div>
+  </div>
+
+      <div class="row">
+      <div class="col-md-12">
+          <div class="dashboard-card">
+              <h5>Total No. Of Refferal </h5>
+              <span>{% if total_no_of_member_reffered %} {{ total_no_of_member_reffered}}{% endif %}</span>
+            
+          </div>
+      </div>
+  </div>
+
+  {% comment %} <div class="row" style="display: flex; flex-wrap: wrap;">
+    <div class="col-md-6" style="display: flex; flex-direction: column;">
+        <div class="dashboard-card" style="display: flex; align-items: center; justify-content: center; height: 100%; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); width: 100%;">
+            <canvas id="myChart"></canvas>
+        </div>
+    </div>
+
+    <div class="col-md-6" style="display: flex; flex-direction: column;">
+        <div class="dashboard-card" style="display: flex; align-items: center; justify-content: center; height: 100%; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); width: 100%;">
+            <canvas id="myChart1"></canvas>
+        </div>
+    </div>
+</div> {% endcomment %}
+
+{% comment %} <div class="row" style="display: flex; flex-wrap: wrap;">
+  <div class="col-md-6" style="display: flex; flex-direction: column;">
+      <div class="dashboard-card" style="display: flex; align-items: center; justify-content: center; height: 100%; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); width: 100%;">
+          <canvas id="programmingChart"></canvas>
+      </div>
+  </div>
+
+  <div class="col-md-6" style="display: flex; flex-direction: column;">
+      <div class="dashboard-card" style="display: flex; align-items: center; justify-content: center; height: 100%; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); width: 100%;">
+          <canvas id="myChart1"></canvas>
+      </div>
+  </div>
+</div> {% endcomment %}
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+      var month_list = {{ chart_data.month_list|safe }};
+      var user_registration_by_month = {{ chart_data.user_registration_by_month|safe }};
+    
+      const ctx = document.getElementById('myChart');
+      new Chart(ctx, {
+        //type: 'bubble',
+        type: 'bar',
+        //type: 'bubble',
+       // type: 'line',
+        data: {
+          labels: month_list,
+          datasets: [{
+            label: 'User Registrations',
+            data: user_registration_by_month,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    
+      var city_list = {{ chart_data.city_list|safe }};
+      var city_values = {{ chart_data.city_values|safe }};
+    
+      new Chart("myChart1", {
+        type: 'doughnut',
+        
+       // type: "pie",
+        data: {
+          labels: city_list,
+          datasets: [{
+            label: 'User By City',
+            backgroundColor: ["#b91d47", "#00aba9", "#2b5797", "#e8c3b9", "#1e7145"],
+            data: city_values
+          }]
+        },
+        options: {
+          title: {
+            display: true,
+            text: "User Registrations by City"
+          }
+        }
+      });
+    </script>
+    <script>
+     var label_list={{ chart_data.city_list|safe }}
+     // var data_list ={{ chart_data.city_values|safe }}
+
+     // var label_list=["Java", "Python", "C++", "JavaScript", "C#"]
+      var data_list =[25, 30, 15, 20, 10]
+      new Chart($("#programmingChart"), {
+        type: 'polarArea',
+        data: {
+          labels: label_list,
+          datasets: [{
+            data: data_list,
+            backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4CAF50", "#9C27B0"],
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          title: {
+            display: true,
+            text: 'Programming Language Usage on GeeksforGeeks'
+          }
+        }
+      });
+    </script>
+    
+</div>
+{% endblock body %}

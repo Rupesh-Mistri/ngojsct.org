@@ -1,0 +1,538 @@
+{% extends "dashboard_base_layout.html" %}
+{% load static %}
+{% block head_part %}
+<link rel="stylesheet" href="{% static 'css/datatables.min.css' %}">
+<style>
+.management-hierarchy,
+.hv-container,
+.hv-wrapper,
+.hv-item,
+.hv-item-parent,
+.hv-item-children,
+.hv-item-child,
+.person,
+.no-user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.management-hierarchy {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f4f7fa;
+    border-radius: 7px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+.hv-container {
+    width: 100%;
+    overflow: auto;
+}
+
+.hv-item {
+    margin: 10px 0;
+}
+
+.hv-item-children {
+    justify-content: center;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.person,
+.no-user {
+    padding: 5px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    width: 90px; /* Adjust width as needed */
+}
+
+.person img,
+.no-user img {
+    border-radius: 50%;
+    width: 30px; /* Adjust size */
+    height: 30px; /* Adjust size */
+    margin-bottom: 5px; /* Adjust margin */
+}
+
+.person .name,
+.no-user .name {
+    font-size: 8px; /* Adjust font size */
+    color: #333;
+}
+
+.no-user {
+    background: #f0f0f0;
+}
+
+.no-user .name {
+    color: #999;
+}
+
+.hv-item-children::before,
+.hv-item-child::before,
+.hv-item-child::after {
+    content: '';
+    position: absolute;
+    border-color: #ccc;
+}
+
+.hv-item-children::before {
+    top: -10px;
+    left: 50%;
+    height: 10px;
+    border-left: 1px solid;
+    border-top: 1px solid;
+    transform: translateX(-50%);
+}
+
+.hv-item-child::before {
+    top: -10px;
+    left: 50%;
+    height: 20px;
+    border-left: 1px solid;
+    border-bottom: 1px solid;
+    transform: translateX(-50%);
+}
+
+.hv-item-child::after {
+    top: -10px;
+    width: 56%;
+    border-top: 1px solid;
+}
+
+.hv-item-child:first-child::after {
+    left: 50%;
+}
+
+.hv-item-child:last-child::after {
+    right: 50%;
+}
+
+.hv-item-child:only-child::after {
+    display: none;
+}
+
+/* Genealogy Scroll */
+.genealogy-body {
+    white-space: nowrap;
+    overflow-x: auto; /* Horizontal scroll */
+    overflow-y: hidden; /* Hide vertical scroll */
+    padding: 10px;
+    min-height: 500px;
+    text-align: center;
+    position: relative;
+    border-bottom: 10px solid #f4f7fa; /* Add a bottom border */
+}
+
+/* Scroll container */
+.genealogy-scroll {
+    overflow: auto; /* Enable both scrollbars */
+    max-width: 100vw; /* Set to viewport width */
+    padding: 20px; /* Add padding for better visibility */
+    box-sizing: border-box; /* Include padding in width calculation */
+    border-bottom: 10px solid #f4f7fa; /* Match the bottom border of genealogy-body */
+}
+
+
+
+/* .genealogy-scroll::-webkit-scrollbar-thumb:hover {
+    background: #d5b14c;
+    transition: 0.5s;
+} */
+
+/* Tree styles */
+.genealogy-tree {
+    display: inline-block;
+    min-width: 100%; /* Ensure the tree takes up the full width */
+}
+
+.genealogy-tree ul {
+    padding-top: 20px;
+    position: relative;
+    padding-left: 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: nowrap; /* Keep items in a single line */
+}
+
+.genealogy-tree li {
+    float: left;
+    text-align: center;
+    list-style-type: none;
+    position: relative;
+    padding: 20px 5px 0 5px;
+}
+
+.genealogy-tree li::before,
+.genealogy-tree li::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 50%;
+    border-top: 2px solid #ccc;
+    width: 50%;
+    height: 18px;
+}
+
+.genealogy-tree li::after {
+    right: auto;
+    left: 50%;
+    border-left: 2px solid #ccc;
+}
+
+.genealogy-tree li:only-child::after,
+.genealogy-tree li:only-child::before {
+    display: none;
+}
+
+.genealogy-tree li:only-child {
+    padding-top: 0;
+}
+
+.genealogy-tree li:first-child::before,
+.genealogy-tree li:last-child::after {
+    border: 0 none;
+}
+
+.genealogy-tree li:last-child::before {
+    border-right: 2px solid #ccc;
+    border-radius: 0 5px 0 0;
+}
+
+.genealogy-tree li:first-child::after {
+    border-radius: 5px 0 0 0;
+}
+
+.genealogy-tree ul ul::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    border-left: 2px solid #ccc;
+    width: 0;
+    height: 20px;
+}
+
+.genealogy-tree li a {
+    text-decoration: none;
+    color: #666;
+    font-family: Arial, Verdana, Tahoma;
+    font-size: 10px; /* Adjust font size */
+    display: inline-block;
+    border-radius: 5px;
+}
+
+/* .genealogy-tree li a:hover,
+.genealogy-tree li a:hover+ul li a {
+    background: #c8e4f8;
+    color: #000;
+}
+
+.genealogy-tree li a:hover+ul li::after,
+.genealogy-tree li a:hover+ul li::before,
+.genealogy-tree li a:hover+ul::before,
+.genealogy-tree li a:hover+ul ul::before {
+    border-color: #fbba00;
+} */
+
+/* Member Card Design */
+.member-view-box {
+    padding-bottom: 5px;
+    text-align: center;
+    border-radius: 4px;
+    position: relative;
+    border: 1px;
+    border-color: #e4e4e4;
+    border-style: solid;
+}
+
+.member-image {
+    padding: 5px;
+    width: 100px; /* Adjust width */
+    position: relative;
+}
+
+.member-image img {
+    width: 60px; /* Adjust size */
+    height: 60px; /* Adjust size */
+    border-radius: 6px;
+    background-color: #fff;
+    z-index: 1;
+}
+
+.member-header {
+    padding: 5px 0;
+    text-align: center;
+    background: #345;
+    color: #fff;
+    font-size: 12px; /* Adjust font size */
+    border-radius: 4px 4px 0 0;
+}
+
+.member-footer {
+    text-align: center;
+}
+
+.member-footer div.name {
+    color: #000;
+    font-size: 12px; /* Adjust font size */
+    margin-bottom: 5px;
+}
+
+.member-footer div.downline {
+    color: #000;
+    font-size: 10px; /* Adjust font size */
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .management-hierarchy {
+        margin-top: 10px;
+        padding: 10px;
+    }
+
+    .person,
+    .no-user {
+        width: 60px; /* Adjust width */
+    }
+
+    .person img,
+    .no-user img {
+        width: 25px; /* Adjust size */
+        height: 25px; /* Adjust size */
+    }
+
+    .person .name,
+    .no-user .name {
+        font-size: 6px; /* Adjust font size */
+    }
+
+    .member-image {
+        width: 60px; /* Adjust width */
+    }
+
+    .member-image img {
+        width: 50px; /* Adjust size */
+        height: 50px; /* Adjust size */
+    }
+
+    .member-header,
+    .member-footer div.name,
+    .member-footer div.downline {
+        font-size: 10px; /* Adjust font size */
+    }
+
+    .genealogy-tree ul {
+        padding-top: 10px;
+    }
+
+    .genealogy-tree li {
+        padding: 10px 5px 0 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .person,
+    .no-user {
+        width: 50px; /* Adjust width */
+    }
+    .member-view-box{
+        margin-top:11px;
+    }
+
+    .person img,
+    .no-user img {
+        width: 20px; /* Adjust size */
+        height: 20px; /* Adjust size */
+    }
+
+    .person .name,
+    .no-user .name {
+        font-size: 5px; /* Adjust font size */
+    }
+
+    .member-image {
+        width: 50px; /* Adjust width */
+    }
+
+    .member-image img {
+        width: 40px; /* Adjust size */
+        height: 40px; /* Adjust size */
+    }
+
+    .member-header,
+    .member-footer div.name,
+    .member-footer div.downline {
+        font-size: 8px; /* Adjust font size */
+    }
+
+    .genealogy-tree ul {
+        padding-top: 15px;
+    }
+
+    .genealogy-tree li {
+        padding: 5px 5px 0 5px;
+    }
+}
+
+</style>
+{% endblock head_part %}
+{% block body %}
+<div class="body genealogy-body genealogy-scroll" >
+    <h1 class="page-title">Member Tree </h1>
+        <div class="genealogy-tree">
+            <ul id="genealogyRoot">
+                
+            </ul>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" ></script>
+    <script src="{% static 'js/datatables.min.js' %}"></script>
+    <script>
+        //alert('geee')
+        function generateTree(node) {
+        if (!node) {
+            return '';
+        }
+        
+        let html = '<li>';
+        html += '<a href="javascript:void(0);">';
+        html += '<div class="member-view-box">';
+        
+        // Check if the node has a member object
+        if (node.member) {
+            let member = node.member;
+            html += '<div class="member-header">';
+            html += '<span>Member</span>';
+            html += '</div>';
+            html += '<div class="member-image">';
+            html += '<img src="' + '{% static 'images/new2.png' %}'  + '" alt="">';
+            html += '</div>';
+            html += '<div class="member-footer">';
+            html += '<p class="name" style="color:blue">' + member.name + '<br><b>' + member.memberID + '</b><br><b>' + member.rank + '</b></p>';
+            html += '<div class="downline"><span></span></div>';
+            html += '</div>';
+        } else {
+            // If there's no member object, display default content
+            html += '<div class="member-header">';
+            html += '<span>Member</span>';
+            html += '</div>';
+            html += '<div class="member-image">';
+            html += '<img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" alt="Member">';
+            html += '</div>';
+            html += '<div class="member-footer">';
+            html += '<div class="name"><span>No User Data</span></div>';
+            html += '<div class="downline"><span>2 | 3</span></div>';
+            html += '</div>';
+        }
+        
+        html += '</div>';
+        html += '</a>';
+    
+        // Recursively generate children nodes
+        let childrenHtml = '';
+        let childrenCount = node.children ? node.children.length : 0;
+        if (childrenCount > 0) {
+            html += '<ul>';
+            node.children.forEach(function(child) {
+                html += generateTree(child);
+            });
+            // Add placeholders if there are less than two children
+            for (let i = childrenCount; i < 2; i++) {
+                html += '<li><div class="member-view-box">';
+                html += '<div class="member-header">';
+                html += '<span>Member</span>';
+                html += '</div>';
+                html += '<div class="member-image">';
+                html += '<img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" alt="Member">';
+                html += '</div>';
+                html += '<div class="member-footer">';
+                html += '<div class="name"><span>No User Data</span></div>';
+                html += '<div class="downline"><span>2 | 3</span></div>';
+                html += '</div>';
+                html += '</div></li>';
+            }
+            html += '</ul>';
+        } else {
+            // If no children, show two empty nodes
+           // html += '<ul>';
+           // for (let i = 0; i < 2; i++) {
+           //     html += '<li><div class="member-view-box">';
+           //     html += '<div class="member-header">';
+           //     html += '<span>Member</span>';
+           //     html += '</div>';
+           //     html += '<div class="member-image">';
+           //     html += '<img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" alt="Member">';
+           //     html += '</div>';
+           //     html += '<div class="member-footer">';
+           //     html += '<div class="name"><span>No User Data</span></div>';
+           //     html += '<div class="downline"><span>2 | 3</span></div>';
+           //     html += '</div>';
+           //     html += '</div></li>';
+           // }
+            html += '';
+        }
+    
+        html += '</li>';
+        //console.log(html)
+        // Update the HTML of the genealogyRoot element
+        //alert(html)
+        //document.getElementById("genealogyRoot").innerHTML = html;
+        return html;
+    }
+    tree = {{tree|safe}}
+    console.log(tree)
+    //trr={'member': {'name': 'Kristina', 'memberID': 'KRISTINA'}, 'children': [{'member': {'name': 'Rupesh', 'memberID': 'KRI022502'}, 'children': [{'member': {'name': 'Mobile', 'memberID': 'KRI022504'}, 'children': []}]}, {'member': {'name': 'Laptop', 'memberID': 'KRI022503'}, 'children': []}, {'member': {'name': 'Mahesh', 'memberID': 'KRI022505'}, 'children': []}]}
+    //alert(trr)
+    document.getElementById("genealogyRoot").innerHTML = generateTree(tree)
+    </script>
+    {% comment %} <script>
+        
+       $(function () {
+        // Initially hide all submenus
+        $('.genealogy-tree ul').hide();
+        $('.genealogy-tree>ul').show();
+        $('.genealogy-tree ul.active').show();
+    
+        // Event listener for click events on tree items
+        $('.genealogy-tree li').on('click', function (e) {
+            var children = $(this).find('> ul');
+            if (children.is(":visible")) {
+                children.hide('fast').removeClass('active');
+            } else {
+                children.show('fast').addClass('active');
+            }
+    
+            // Instead of scrolling immediately, calculate the target scroll position
+            setTimeout(function() {
+                var scrollContainer = $('.genealogy-body');
+                var containerTop = scrollContainer.offset().top;
+                var scrollTo = $(this).offset().top - containerTop + scrollContainer.scrollTop() - (scrollContainer.height() / 2);
+                
+                // Animate the scroll to the calculated position
+                scrollContainer.animate({
+                    scrollTop: scrollTo
+                }, 'fast');
+            }.bind(this), 300); // Adjust the delay as needed to ensure animation timing
+    
+            e.stopPropagation();
+        });
+    
+        // Force horizontal scrollbar to be visible on load
+        $('.genealogy-scroll').each(function () {
+            if (this.scrollWidth > this.clientWidth) {
+                $(this).css('overflow-x', 'auto');
+            }
+        });
+    });
+    
+    </script> {% endcomment %}
+    
+{% endblock body %}
