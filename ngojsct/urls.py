@@ -25,11 +25,11 @@ from ngojsct_mlm.views import *
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    path('',index,name="index"),
+    # path('',index,name="index"),
 
 
     #
-    path('login', login_view, name='login'),
+    path('', login_view, name='login'),
     path('register/', register_view, name='register'),
     path('logout/', logout_view, name='logout'),
     path('get_sponser_name_ajax/', get_sponser_name_ajax, name='get_sponser_name_ajax'),
