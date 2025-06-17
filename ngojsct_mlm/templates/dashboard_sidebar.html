@@ -16,10 +16,10 @@
                
                 
                 <li class="slide">
-                        <a class="side-menu__item" data-bs-toggle="slide" href="/dashboard"><i class="side-menu__icon fe fe-home"></i><span class="side-menu__label">Dashboard</span></a>
+                        <a class="side-menu__item" data-bs-toggle="slide" href="/dashboard/"><i class="side-menu__icon fe fe-home"></i><span class="side-menu__label">Dashboard</span></a>
                 </li>
                 <li class="slide">
-                    <a class="side-menu__item" data-bs-toggle="slide"  href="/profile"><i class="side-menu__icon fe fe-slack"></i><span class="side-menu__label">Profile</span></a>
+                    <a class="side-menu__item" data-bs-toggle="slide"  href="/profile/"><i class="side-menu__icon fe fe-slack"></i><span class="side-menu__label">Profile</span></a>
                 </li>
                 {% comment %} <li class="slide">
                     <a class="side-menu__item" data-bs-toggle="slide" href="/referring_registration"><i class="side-menu__icon fe fe-slack"></i><span class="side-menu__label">New Referrals </span></a>
@@ -28,7 +28,7 @@
                 
 
                 <li class="slide">
-                    <a class="side-menu__item" data-bs-toggle="slide" href="/member_tree/{{user.id}}"><i class="side-menu__icon fe fe-slack"></i><span class="side-menu__label">Member Tree</span></a>
+                    <a class="side-menu__item" data-bs-toggle="slide" href="/level_data/{{user.id}}"><i class="side-menu__icon fe fe-slack"></i><span class="side-menu__label">Level Data</span></a>
                 </li>
 
                 <li class="slide">
@@ -36,8 +36,12 @@
                 </li>
 
                <li class="slide">
-                    <a class="side-menu__item" data-bs-toggle="slide" href="/donation_slip/{{user.id}}/register_slip/"><i class="side-menu__icon fe fe-slack"></i><span class="side-menu__label">Slips </span></a>
+                    <a class="side-menu__item" data-bs-toggle="slide" href="/donation_slip_list/{{user.id}}/"><i class="side-menu__icon fe fe-slack"></i><span class="side-menu__label">Slips List</span></a>
                 </li>
+
+               {% comment %} <li class="slide">
+                    <a class="side-menu__item" data-bs-toggle="slide" href="/donation_slip/{{user.id}}/register_slip/"><i class="side-menu__icon fe fe-slack"></i><span class="side-menu__label">Slips </span></a>
+                </li> {% endcomment %}
 
                 <li class="slide">
                     <a class="side-menu__item" data-bs-toggle="slide"  href="/logout"><i class="side-menu__icon fe fe-slack"></i><span class="side-menu__label">Logout</span></a>

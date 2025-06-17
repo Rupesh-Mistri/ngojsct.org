@@ -30,13 +30,17 @@ urlpatterns = [
 
     #
     path('', login_view, name='login'),
+    path('login/', login_view, name='login'),
     path('register/', register_view, name='register'),
     path('logout/', logout_view, name='logout'),
     path('get_sponser_name_ajax/', get_sponser_name_ajax, name='get_sponser_name_ajax'),
     path('cascade_ajax/', cascade_ajax, name='cascade_ajax'),
     path('dashboard/', dashboard, name='dashboard'),
-    path('donation_slip/', donation_slip, name='donation_slip'),
+    path('donation_slip_list/<id>/',donation_slip_list,name='donation_slip_list'),
+    path('donation_slip/<id>/<slip_for>/',donation_slip,name='donation_slip'),
     # path('donation_slip/<int:pk>/', donation_slip, name='donation_slip_detail'),
+    path('level_data/<id>/', level_data, name='member_tree'),
+    path('profile/', profile, name='profile'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

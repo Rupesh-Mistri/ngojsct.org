@@ -1,0 +1,201 @@
+{% extends "dashboard_base_layout.html" %}
+{% block head_part %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+
+    .id-card {
+        width: 700px;
+        border: 5px solid #000;
+        padding: 20px;
+        /*background-color: #f9d9cc;*/
+        background-color:rgb(238, 235, 234);
+        margin: 20px auto;
+    }
+
+    .id-card-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .id-card-header img {
+        height: 50px;
+    }
+
+    .id-card-header h1 {
+        margin: 5px 0;
+        font-size: 24px;
+        color: red;
+    }
+
+    .id-card-header h2 {
+        margin: 0;
+        font-size: 20px;
+        color: #333;
+    }
+
+    .id-card-content {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .photo {
+        width: 150px;
+        height: 200px;
+        border: 3px solid #000;
+        margin-right: 20px;
+    }
+
+    .details {
+        flex: 1;
+    }
+
+    .details p {
+        margin: 8px 0;
+        font-size: 18px;
+    }
+
+    .details span {
+        font-weight: bold;
+    }
+
+    .footer {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .footer div {
+        text-align: center;
+        font-size: 14px;
+    }
+
+    .footer div span {
+        display: block;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+</style>
+{% endblock head_part %}
+{% block body %}
+<div class="container  sm:pt-0">
+    <div class="mt-2 bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
+        <h3 class="text-center mt-2">Profile Details</h3>
+        
+        
+            <div class="card-header px-2 py-1 bg-success text-white">Personal Details</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 form-group mb-3">
+                        <strong>Sponser ID:</strong> 
+                        {% if member_details.senior_ID %}{{ member_details.senior_ID }}{% else %}NA {% endif %}
+                        
+                    </div>
+                    <div class="col-md-3 form-group mb-3">
+                        <strong>Sponsor Name:</strong> 
+                        
+                        {% if member_details.senior_Name %}{{ member_details.senior_Name }}{% else %}NA {% endif %}
+                    </div>
+                    <div class="col-md-3 form-group mb-3">
+                        <strong>Applicant Name:</strong> 
+                        {{ member_details.applicant_name }}
+                       
+                    </div>
+                    <div class="col-md-3 form-group mb-3">
+                        <strong>Mobile No.: </strong> 
+                        {{ member_details.phone_number }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 form-group mb-3">
+                        <strong>Email: </strong> 
+                        {{ member_details.user_detail.email }}
+                    </div>
+                    {% comment %} <div class="col-md-3 form-group mb-3">
+                        <strong>Adhaar No. </strong>
+                        {{ user_details.member.adhar_no }}
+                       
+                    </div> {% endcomment %}
+                    {% comment %} <div class="col-md-3 form-group mb-3">
+                        <strong>Pan No. </strong>
+                        {{ user_details.member.pan_no }}
+                        
+                    </div> {% endcomment %}
+
+                    <div class="col-md-3 form-group mb-3">
+                        <strong>You MemberID </strong>
+                        {{ member_details.user_detail.memberID }}
+                        
+                    </div>
+                 
+                </div>
+            </div>
+
+            <div class="card-header px-2 py-1 bg-success text-white">Address Details</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 form-group mb-3">
+                        <strong>Address </strong>
+                        {{ member_details.address }}
+                        
+                    </div>
+                    <div class="col-md-3 form-group mb-3">
+                        <strong>State </strong>
+                        {{ member_details.state }}
+                       
+                    </div>
+                    <div class="col-md-3 form-group mb-3">
+                        <strong>City </strong>
+                        {{ member_details.city }}
+                      
+                    </div>
+                    <div class="col-md-3 form-group mb-3">
+                        <strong>Pin Code </strong>
+                        {{ member_details.pincode }}
+                       
+                    </div>
+                </div>
+            
+{% comment %} 
+                <div id="id_card">
+                    <div class="id-card">
+                        <div class="id-card-header">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/India_Post_Logo.svg/1200px-India_Post_Logo.svg.png" alt="India Post Logo">
+                            <h1>{{COMPANY_NAME}}</h1>
+                            <h2>{{COMPANY_ADDRESS}}</h2>
+                        </div>
+                        <div class="id-card-content">
+                            <div class="photo">
+                                <img src="https://via.placeholder.com/150x200" alt="Employee Photo" style="width: 100%; height: 100%;">
+                            </div>
+                            <div class="details">
+                                <p><span>Name:</span> {{ user_details.member.name }}</p>
+                                <p><span>Member ID:</span> {{ user_details.memberID }}</p>
+                               
+                                <p><span>Mobile No:</span>  {{ user_details.member.mobile_no }}</p>
+                        
+                                <p><span>Address:</span>  {{ user_details.member.address }}</p>
+
+                            </div>
+                        </div>
+                        <div class="footer">
+                            <div>
+                                Issuing Authority
+                                <span>__________________</span>
+                            </div>
+                            <div>
+                                Signature of the Employee
+                                <span>__________________</span>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!--  id="id_card" end--> {% endcomment %}
+
+          
+    </div>
+</div>
+{% endblock body %}

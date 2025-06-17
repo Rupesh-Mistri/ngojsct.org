@@ -54,6 +54,12 @@ class MemberRegistrationForm(forms.ModelForm):
     # ('registration_fee', self.fields['registration_fee']),
 ])
 
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if CustomUser.objects.filter(email=email).exists():
+            raise forms.ValidationError("A user with this email already exists.")
+        return email
+
     def clean(self):
         cleaned_data = super().clean()
         password = cleaned_data.get("password")

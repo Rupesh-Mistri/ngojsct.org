@@ -8,6 +8,8 @@ from django.contrib.auth import login, logout, authenticate
 from .models import *
 from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
+import json
+from .utilities import login_req
 # Create your views here.
 
 from django.contrib.auth import get_user_model
@@ -69,8 +71,8 @@ def register_view(request):
             member = form.save(commit=False)
 
             # Determine sponsor
-            sponsor_id = request.POST.get('sponserID')
-            sponsor_member = MemberModel.objects.filter(user_detail__memberID=sponsor_id).first()
+            senior_ID = request.POST.get('senior_ID')
+            sponsor_member = MemberModel.objects.filter(user_detail__memberID=senior_ID).first()
             member_count = MemberModel.objects.count()
 
             if sponsor_member or member_count == 0:
@@ -84,7 +86,11 @@ def register_view(request):
                 distribution_of_amount(request, member.id)
                 if memberID != "JSCT000001":
                     member_refferal_benefits(request, member.id)
-
+                    DonationsModel.objects.create(
+                        member_id       = member.id,
+                        amount          = 1551,
+                        slip_for        ='Registration'
+                    )
                 messages.success(request, "Registration successful! You can now log in.")
 
                 # Login the user
@@ -107,7 +113,7 @@ def register_view(request):
 
 def distribution_of_amount(request, member_id):
     user_type = request.GET.get('user_type', 'individual')  # or get it from authenticated user
-    
+    print(f'member_id:{member_id}')
     # Fixed values
     total_amount = 1551
     leader_expense = 50
@@ -164,7 +170,7 @@ def level_income(request, member_id):
     }
 
     upliners = get_all_upliners(member_id)
-    referee = MemberModel.objects.get(user_detail_id=member_id)
+    referee = MemberModel.objects.get(id=member_id)
 
     for idx, upliner in enumerate(upliners[:10]):  # Limit to 10 levels
         level = str(idx + 1)
@@ -330,24 +336,25 @@ def cascade_ajax(request):
 def get_sponser_name_ajax(request):
     if request.method == 'POST':
         sponserID= request.POST.get('sponserID')
-        user= CustomUser.objects.filter(is_active=True,memberID=sponserID).first()
+        user= CustomUser.objects.filter(memberID=sponserID).first()
         if user:
-           data={"name": user.name,"status":True}
+           data={"name": user.applicant_name,"status":True}
         #    print(data)
            return JsonResponse(data, safe=False) 
     return JsonResponse([],safe=False)
 
 
-@login_required
+@login_req
 def dashboard(request):
     user=request.user
     user_id=user.id
-    # member_dtl= MemberModel.objects.filter(user_detail_id=user_id).first()
-    # level_income=LevelIncomeDistributionModel.objects.filter(referrer=member_dtl.id).aggregate(total=Sum('income'))['total'] or 0
-    # total_no_of_member_reffered= MemberModel.objects.filter(sponser_member=user_id).count()
-    # position_income=FundDistributionModel.objects.filter(member_id=user_id).first()
+    print(user_id)
+    member_dtl= MemberModel.objects.filter(user_detail_id=user_id).first()
+    level_income=LevelIncomeDistributionModel.objects.filter(referrer=member_dtl.id).aggregate(total=Sum('income'))['total'] or 0
+    total_no_of_member_reffered= MemberModel.objects.filter(sponser_member=user_id).count()
+    position_income=FundDistributionModel.objects.filter(member_id=user_id).first()
     return render(request,'dashboard.html',
-                  #{'level_income':level_income,'member_dtl':member_dtl,'total_no_of_member_reffered':total_no_of_member_reffered,'position_income':position_income}
+                  {'level_income':level_income,'member_dtl':member_dtl,'total_no_of_member_reffered':total_no_of_member_reffered,'position_income':position_income}
                   )
 
 
@@ -358,9 +365,47 @@ def logout_view(request):
     logout(request)
     return redirect('login')  # Redirect to the login page after logout
 
+def donation_slip_list(request,id):
+    return render(request,'donation_slip_list.html')
 
-def donation_slip(request):
+def donation_slip(request,id,slip_for):
     """
     Renders the donation slip page.
     """
     return render(request, 'donation_slip.html')
+
+def level_data(request,id):
+    tree= build_tree(id)
+    print(tree)
+    return render(request,'level_data.html',{'tree':json.dumps(tree)})
+
+def build_tree(id):
+    user=CustomUser.objects.filter(id=id).first()
+    member = MemberModel.objects.filter(id=id).first()
+    if not member:
+        return None
+
+    # Query for children where the current member is the sponsor
+    children = MemberModel.objects.filter(sponser_member_id=member.id)
+    tree = {
+        'member': {'name':member.applicant_name,'memberID':user.memberID,'rank':member.rank},
+        'children': []
+    }
+
+    # Recursively build the tree for each child
+    for child in children:
+        subtree = build_tree(child.id)
+        if subtree:
+            tree['children'].append(subtree)
+
+    return tree
+
+
+@login_req
+def profile(request):
+    """
+    Displays the user profile.
+    """
+    user_details = request.user  # Use Django's built-in user handling
+    member_details = MemberModel.objects.filter(user_detail_id=user_details.id).first()
+    return render(request, 'profile.html', {'member_details': member_details})
