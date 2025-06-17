@@ -365,10 +365,14 @@ def logout_view(request):
     logout(request)
     return redirect('login')  # Redirect to the login page after logout
 
-def donation_slip_list(request,id):
-    return render(request,'donation_slip_list.html')
+@login_req
+def donation_slip_list(request):
+    user=request.user
+    user_id=user.id
+    donation_list=DonationsModel.objects.filter(member_id=user_id)
+    return render(request,'donation_slip_list.html',{'donation_list':donation_list})
 
-def donation_slip(request,id,slip_for):
+def donation_slip(request,id):
     """
     Renders the donation slip page.
     """
