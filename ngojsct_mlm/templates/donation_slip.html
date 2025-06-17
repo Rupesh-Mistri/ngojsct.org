@@ -70,7 +70,7 @@
   }
 
       .section{
-        padding:0px
+        padding:0 0
     }
   </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
@@ -79,7 +79,7 @@
 {% block body %}
 <div id="page-container" class="container-fluid mt-4">
     <div class="dashboard-card">
-        <h5>Donation List</h5>
+        <h5>Donation Slip</h5>
         <div class="header-container">
   <div class="row align-items-center">
     <div class="col-auto">
@@ -105,18 +105,21 @@
 
   <!---->
   <div class="d-flex justify-content-between section">
-    <div>S. No. .....................</div>
-    <div>Date .....................</div>
+    <div><strong>S. No. :</strong> {{member_dtl.user_detail.memberID}}</div>
+    <div><strong>Date :</strong> {{slip_dtl.created_at|date:"d-m-Y"}}</div>
   </div>
 
-  <div class="section">Received with thanks from ......................................................................................................</div>
-  <div class="section">Address ................................................................................................................................................</div>
-  <div class="section">Sum of Rupees ............................................................................................................................................</div>
-  <div class="section">Toward Donation by Cash/Cheque No. .............................................. Mob No. .......................</div>
-
+  <div class="section"><strong>Received with thanks from :</strong> {{member_dtl.applicant_name}}</div>
+  <div class="section"><strong>Address :</strong>  {{member_dtl.address}}</div>
+  <div class="section"><strong>Sum of Rupees :</strong> {{member_dtl.registration_fee}}</div>
+  <div class="section"><strong>Toward Donation by Cash/Cheque No. :</strong> NA      <span class="text-end"><strong >Mob No. :</strong>{{member_dtl.phone_number}}</span>  </div>
+  {% comment %} <div class="d-flex justify-content-between section">
+    <div><strong>Toward Donation by Cash/Cheque No.</strong> NA</div>
+    <div><strong>Mob No.</strong> {{member_dtl.phone_number}}</div>
+  </div> {% endcomment %}
   <div class="box mt-2 d-flex flex-row justify-content-between">
     <div class="border-black-4 px-2 py-1">
-    <div>बेटियों की शादी में रुपये .......................................................... का</div>
+    <div>बेटियों की शादी में रुपये {{slip_dtl.amount}} का</div>
     <div>सहयोग करने के लिए आपका धन्यवाद।</div>
     </div>
     <div class="text-end"><strong>FOR JAN SAHYOG <br>CHARITABLE TRUST</strong></div>
@@ -125,7 +128,7 @@
 <div class="box mt-2 d-flex flex-row justify-content-between align-items-center">
   <div class="small-note me-3 flex-grow-1">
     Revenue Stamp not required on receipts for donation [Indian Stamp Act, 1899: Schl. cl.53 (b)]<br />
-    Note: Donation amount will not be refunded under any circumstances धोखा।
+    Note: Donation amount will not be refunded under any circumstances होगी।
   </div>
 
   <div>

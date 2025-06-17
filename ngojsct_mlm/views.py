@@ -376,7 +376,9 @@ def donation_slip(request,id):
     """
     Renders the donation slip page.
     """
-    return render(request, 'donation_slip.html')
+    slip_dtl=DonationsModel.objects.filter(id=id).first()
+    member_dtl=MemberModel.objects.filter(id=slip_dtl.id).first()
+    return render(request, 'donation_slip.html',{'slip_dtl':slip_dtl,'member_dtl':member_dtl})
 
 def level_data(request,id):
     tree= build_tree(id)

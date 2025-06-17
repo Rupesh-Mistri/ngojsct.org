@@ -196,7 +196,7 @@ class FundDistributionModel(models.Model):
 
 class DonationsModel(models.Model):
     member = models.ForeignKey('MemberModel', on_delete=models.CASCADE)
-    amount=models.DecimalField( max_digits=5, decimal_places=2)
+    amount=models.DecimalField( max_digits=20, decimal_places=2)
     slip_for = models.CharField( max_length=50)
     created_at = models.DateTimeField(default=now)  # Default to current time
     updated_at = models.DateTimeField(auto_now=True)  # Automatically update on save
