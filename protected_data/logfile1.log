@@ -29227,3 +29227,4 @@
 2025-06-16 16:55:59,033 - INFO - Created record :,nan
 2025-06-16 16:55:59,044 - INFO - already exist  :,For more information, kindly visit :  www.downloadexcelfiles.com 
 2025-06-16 16:55:59,044 - INFO - Database reset and data import completed successfully.
+2025-06-17 07:31:21,030 - ERROR - Error during reset: (1049, "Unknown database 'ngojsct_org'")

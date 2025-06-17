@@ -357,3 +357,10 @@ def logout_view(request):
     """
     logout(request)
     return redirect('login')  # Redirect to the login page after logout
+
+
+def donation_slip(request):
+    """
+    Renders the donation slip page.
+    """
+    return render(request, 'donation_slip.html')

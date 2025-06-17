@@ -35,7 +35,8 @@ urlpatterns = [
     path('get_sponser_name_ajax/', get_sponser_name_ajax, name='get_sponser_name_ajax'),
     path('cascade_ajax/', cascade_ajax, name='cascade_ajax'),
     path('dashboard/', dashboard, name='dashboard'),
-
+    path('donation_slip/', donation_slip, name='donation_slip'),
+    # path('donation_slip/<int:pk>/', donation_slip, name='donation_slip_detail'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
