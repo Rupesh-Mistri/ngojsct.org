@@ -1,142 +1,175 @@
 {% extends "dashboard_base_layout.html" %}
-
+{% load static %}
 {% block head_part %}
 <style>
-    .dashboard-card {
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 20px;
-        margin-bottom: 20px;
-        background-color: #fff;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    }
-    .dashboard-card h5 {
-        font-size: 1.5rem;
-        color: #333;
-        margin-bottom: 15px;
-    }
-    .donation-table {
-        width: 100%;
-    }
-    .donation-table th {
-        background-color: #f8f9fa;
-        font-weight: 600;
-    }
-    .donation-table th, .donation-table td {
-        padding: 10px;
-        text-align: center;
-        vertical-align: middle;
-        border: 1px solid #ddd;
-    }
+   .dashboard-card {
+   border: 1px solid #ddd;
+   border-radius: 8px;
+   padding: 20px;
+   margin-bottom: 20px;
+   background-color: #fff;
+   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+   }
+   .dashboard-card h5 {
+   font-size: 1.5rem;
+   color: #333;
+   margin-bottom: 15px;
+   }
+   .donation-table {
+   width: 100%;
+   }
+   .donation-table th {
+   background-color: #f8f9fa;
+   font-weight: 600;
+   }
+   .donation-table th, .donation-table td {
+   padding: 10px;
+   text-align: center;
+   vertical-align: middle;
+   border: 1px solid #ddd;
+   }
 </style>
-  <style>
-    .header-container {
-      border: 1px solid #000;
-      padding: 10px;
-      max-width: 680px;
-      margin: 20px auto;
-      background: #fff;
-    }
-    .logo {
-      width: 120px;
-      height: auto;
-    }
-    .main-title {
-      font-weight: 900;
-      font-size: 28px;
-    }
-    .sub-title {
-      font-size: 16px;
-      font-weight: 500;
-    }
-    .branch-bar {
-      background: #000;
-      color: #fff;
-      padding: 4px 8px;
-      font-size: 14px;
-      margin-top: 5px;
+<style>
+   .header-container {
+   border: 1px solid #000;
+   padding: 10px;
+   max-width: 680px;
+   margin: 20px auto;
+   background: #fff;
+   }
+   .logo {
+   width: 120px;
+   height: auto;
+   }
+   .main-title {
+   font-weight: 900;
+   font-size: 28px;
+   }
+   .sub-title {
+   font-size: 16px;
+   font-weight: 500;
+   }
+   .branch-bar {
+   background: #000;
+   color: #fff;
+   padding: 4px 8px;
+   font-size: 14px;
+   margin-top: 5px;
+   }
+   .border-black-4 {
+   border: 2px solid black;
+   border-radius: 10px; /* same as Bootstrap's .rounded */
+   }
+   .small-note {
+   font-size: 0.75rem; /* Makes text smaller */
+   white-space: nowrap; /* Prevents text from wrapping */
+   overflow: hidden;
+   text-overflow: ellipsis; /* Optional: adds "..." if text is too long */
+   }
+   .section{
+   padding:0 0
+   }
+
+.watermark {
+    position: relative;
+    z-index: 1;  /* ensures content stays above the watermark */
+}
+
+.watermark::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("{% static 'images/logo_watermark.png' %}");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;   /* or 'cover' if you want full coverage */
+    opacity: 0.5;              /* adjust to desired faintness */
+    z-index: -1;                /* puts watermark behind content */
+    pointer-events: none;       /* allows clicks through the pseudo element */
+}
+
+
+    .stamp_signature {
+        display: flex;
+        align-items: center;
+     
+        position: relative;
+        z-index: 10;
     }
 
-  .border-black-4 {
-    border: 2px solid black;
-    border-radius: 10px; /* same as Bootstrap's .rounded */
-  }
-
-    .small-note {
-    font-size: 0.75rem; /* Makes text smaller */
-    white-space: nowrap; /* Prevents text from wrapping */
-    overflow: hidden;
-    text-overflow: ellipsis; /* Optional: adds "..." if text is too long */
-  }
-
-      .section{
-        padding:0 0
+    .stamp_signature img {
+        width: 120px;
+        height: 120px;
+        position: absolute;
+       
+        transform: translate(-50%, -50%);
+        z-index: 100;
     }
-  </style>
+
+</style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 {% endblock head_part %}
-
 {% block body %}
 <div id="page-container" class="container-fluid mt-4">
-    <div class="dashboard-card">
-        <h5>Donation Slip</h5>
-        <div class="header-container">
-  <div class="row align-items-center">
-    <div class="col-auto">
-      <img src="/static/images/logo_rect.png" alt="Logo" class="logo" />
-    </div>
-    <div class="col">
-      <div class="text-center fw-bold">
-        Regd. Under Trust Act 1882 | Regd. No.2020/HAZ/222/BK4/14
+   <div class="dashboard-card">
+      <h5>Donation Slip</h5>
+      <div class="header-container">
+         <div class="row align-items-center">
+            <div class="col-auto">
+               <img src="/static/images/logo_rect.png" alt="Logo" class="logo" />
+            </div>
+            <div class="col">
+               <div class="text-center fw-bold">
+                  Regd. Under Trust Act 1882 | Regd. No.2020/HAZ/222/BK4/14
+               </div>
+               <div class="text-center main-title">
+                  JAN SAHYOG CHARITABLE TRUST
+               </div>
+               <div class="text-center sub-title">
+                  E-mail: jscthazaribagh@gmail.com | Office No.: 9431901463
+               </div>
+            </div>
+         </div>
+         <div class="branch-bar text-center">
+            Branch Office : 6<sup>th</sup> Floor, 6E, Nawab Ganj Road, Opposit Lakshmi Petrol Pump Jheel Tower, Hazaribag
+         </div>
+         <div  class="text-center font-bold p-1 mt-2"><span class="border-black-4 px-2 py-1"> DONATION RECEIPT</span></div>
+         <!---->
+         <div class="watermark">
+            <div class="d-flex justify-content-between section">
+                <p><strong>S. No. :</strong> {{member_dtl.user_detail.memberID}}</p>
+                <p><strong>Date :</strong> {{slip_dtl.created_at|date:"d-m-Y"}}</p>
+            </div>
+            <p class="section"><strong>Received with thanks from :</strong> {{member_dtl.applicant_name}}</p>
+            <p class="section"><strong>Address :</strong>  {{member_dtl.address}}</p>
+            <p class="section"><strong>Sum of Rupees :</strong> {{member_dtl.registration_fee}}</p>
+            <p class="section"><strong>Toward Donation by Cash/Cheque No. :</strong> NA      <span class="text-end"><strong >Mob No. :</strong>{{member_dtl.phone_number}}</span>  </p>
+            {% comment %} 
+            <div class="d-flex justify-content-between section">
+                <div><strong>Toward Donation by Cash/Cheque No.</strong> NA</div>
+                <div><strong>Mob No.</strong> {{member_dtl.phone_number}}</div>
+            </div>
+            {% endcomment %}
+            <div class="box mt-2 d-flex flex-row justify-content-between">
+                <div class="border-black-4 px-2 py-1">
+                  <div>बेटियों की शादी में रुपये {{slip_dtl.amount}} का</div>
+                  <div>सहयोग करने के लिए आपका धन्यवाद।</div>
+                </div>
+                <div class="text-end"><strong>FOR JAN SAHYOG <br>CHARITABLE TRUST</strong></div>
+            </div>
+        </div>
+         <div class="box mt-2 d-flex flex-row justify-content-between align-items-center">
+            <div class="small-note me-3 flex-grow-1">
+               Revenue Stamp not required on receipts for donation [Indian Stamp Act, 1899: Schl. cl.53 (b)]<br />
+               Note: Donation amount will not be refunded under any circumstances होगी।
+            </div>
+            <div>
+               <strong>Auth. Signature</strong>
+               <div class="stamp_signature"><img src="{% static 'images/STAMP.png' %}" alt="stamp"></div>
+            </div>
+         </div>
+         <!---->
       </div>
-      <div class="text-center main-title">
-        JAN SAHYOG CHARITABLE TRUST
-      </div>
-      <div class="text-center sub-title">
-        E-mail: jscthazaribagh@gmail.com | Office No.: 9431901463
-      </div>
-    </div>
-  </div>
-  <div class="branch-bar text-center">
-    Branch Office : 6<sup>th</sup> Floor, 6E, Nawab Ganj Road, Opposit Lakshmi Petrol Pump Jheel Tower, Hazaribag
-  </div>
-
-  <div  class="text-center font-bold p-1 mt-2"><span class="border-black-4 px-2 py-1"> DONATION RECEIPT</span></div>
-
-  <!---->
-  <div class="d-flex justify-content-between section">
-    <div><strong>S. No. :</strong> {{member_dtl.user_detail.memberID}}</div>
-    <div><strong>Date :</strong> {{slip_dtl.created_at|date:"d-m-Y"}}</div>
-  </div>
-
-  <div class="section"><strong>Received with thanks from :</strong> {{member_dtl.applicant_name}}</div>
-  <div class="section"><strong>Address :</strong>  {{member_dtl.address}}</div>
-  <div class="section"><strong>Sum of Rupees :</strong> {{member_dtl.registration_fee}}</div>
-  <div class="section"><strong>Toward Donation by Cash/Cheque No. :</strong> NA      <span class="text-end"><strong >Mob No. :</strong>{{member_dtl.phone_number}}</span>  </div>
-  {% comment %} <div class="d-flex justify-content-between section">
-    <div><strong>Toward Donation by Cash/Cheque No.</strong> NA</div>
-    <div><strong>Mob No.</strong> {{member_dtl.phone_number}}</div>
-  </div> {% endcomment %}
-  <div class="box mt-2 d-flex flex-row justify-content-between">
-    <div class="border-black-4 px-2 py-1">
-    <div>बेटियों की शादी में रुपये {{slip_dtl.amount}} का</div>
-    <div>सहयोग करने के लिए आपका धन्यवाद।</div>
-    </div>
-    <div class="text-end"><strong>FOR JAN SAHYOG <br>CHARITABLE TRUST</strong></div>
-  </div>
-
-<div class="box mt-2 d-flex flex-row justify-content-between align-items-center">
-  <div class="small-note me-3 flex-grow-1">
-    Revenue Stamp not required on receipts for donation [Indian Stamp Act, 1899: Schl. cl.53 (b)]<br />
-    Note: Donation amount will not be refunded under any circumstances होगी।
-  </div>
-
-  <div>
-    <strong>Auth. Signature</strong>
-  </div>
-</div>
-  <!---->
-</div>
-    </div>
+   </div>
 </div>
 {% endblock body %}

@@ -397,101 +397,69 @@
     <script src="{% static 'js/datatables.min.js' %}"></script>
     <script>
         //alert('geee')
-        function generateTree(node) {
-        if (!node) {
-            return '';
-        }
-        
-        let html = '<li>';
-        html += '<a href="javascript:void(0);">';
-        html += '<div class="member-view-box">';
-        
-        // Check if the node has a member object
-        if (node.member) {
-            let member = node.member;
-            html += '<div class="member-header">';
-            html += '<span>Member</span>';
-            html += '</div>';
-            html += '<div class="member-image">';
-            html += '<img src="' + '{% static 'images/new2.png' %}'  + '" alt="">';
-            html += '</div>';
-            html += '<div class="member-footer">';
-            html += '<p class="name" style="color:blue">' + member.name + '<br><b>' + member.memberID + '</b><br><b>' + member.rank + '</b></p>';
-            html += '<div class="downline"><span></span></div>';
-            html += '</div>';
-        } else {
-            // If there's no member object, display default content
-            html += '<div class="member-header">';
-            html += '<span>Member</span>';
-            html += '</div>';
-            html += '<div class="member-image">';
-            html += '<img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" alt="Member">';
-            html += '</div>';
-            html += '<div class="member-footer">';
-            html += '<div class="name"><span>No User Data</span></div>';
-            html += '<div class="downline"><span>2 | 3</span></div>';
-            html += '</div>';
-        }
-        
-        html += '</div>';
-        html += '</a>';
-    
-        // Recursively generate children nodes
-        let childrenHtml = '';
-        let childrenCount = node.children ? node.children.length : 0;
-        if (childrenCount > 0) {
-            html += '<ul>';
-            node.children.forEach(function(child) {
-                html += generateTree(child);
-            });
-            // Add placeholders if there are less than two children
-            for (let i = childrenCount; i < 2; i++) {
-                html += '<li><div class="member-view-box">';
-                html += '<div class="member-header">';
-                html += '<span>Member</span>';
-                html += '</div>';
-                html += '<div class="member-image">';
-                html += '<img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" alt="Member">';
-                html += '</div>';
-                html += '<div class="member-footer">';
-                html += '<div class="name"><span>No User Data</span></div>';
-                html += '<div class="downline"><span>2 | 3</span></div>';
-                html += '</div>';
-                html += '</div></li>';
-            }
-            html += '</ul>';
-        } else {
-            // If no children, show two empty nodes
-           // html += '<ul>';
-           // for (let i = 0; i < 2; i++) {
-           //     html += '<li><div class="member-view-box">';
-           //     html += '<div class="member-header">';
-           //     html += '<span>Member</span>';
-           //     html += '</div>';
-           //     html += '<div class="member-image">';
-           //     html += '<img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" alt="Member">';
-           //     html += '</div>';
-           //     html += '<div class="member-footer">';
-           //     html += '<div class="name"><span>No User Data</span></div>';
-           //     html += '<div class="downline"><span>2 | 3</span></div>';
-           //     html += '</div>';
-           //     html += '</div></li>';
-           // }
-            html += '';
-        }
-    
-        html += '</li>';
-        //console.log(html)
-        // Update the HTML of the genealogyRoot element
-        //alert(html)
-        //document.getElementById("genealogyRoot").innerHTML = html;
-        return html;
+function generateTree(node) {
+    if (!node) {
+        return '';
     }
-    tree = {{tree|safe}}
-    console.log(tree)
+
+    let html = '<li>';
+    html += '<a href="javascript:void(0);" class="tree-node">';
+    html += '<div class="member-view-box">';
+
+    if (node.member) {
+        let member = node.member;
+        html += '<div class="member-header">';
+        html += '<span>Member</span>';
+        html += '</div>';
+        html += '<div class="member-image">';
+        html += '<img src="' + '{% static "images/new2.png" %}' + '" alt="">';
+        html += '</div>';
+        html += '<div class="member-footer">';
+        html += '<p class="name" style="color:blue">' + member.name + '<br><b>' + member.memberID + '</b><br><b>' + member.rank + '</b></p>';
+        html += '</div>';
+    } else {
+        html += '<div class="member-header">';
+        html += '<span>Member</span>';
+        html += '</div>';
+        html += '<div class="member-image">';
+        html += '<img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" alt="Member">';
+        html += '</div>';
+        html += '<div class="member-footer">';
+        html += '<div class="name"><span>No User Data</span></div>';
+        html += '</div>';
+    }
+
+    html += '</div>';
+    html += '</a>';
+
+    if (node.children && node.children.length > 0) {
+        html += '<ul style="display:none;">';
+        node.children.forEach(function (child) {
+            html += generateTree(child);
+        });
+        html += '</ul>';
+    }
+
+    html += '</li>';
+    return html;
+}
+
+   // tree = {{tree|safe}}
+ //   console.log(tree)
     //trr={'member': {'name': 'Kristina', 'memberID': 'KRISTINA'}, 'children': [{'member': {'name': 'Rupesh', 'memberID': 'KRI022502'}, 'children': [{'member': {'name': 'Mobile', 'memberID': 'KRI022504'}, 'children': []}]}, {'member': {'name': 'Laptop', 'memberID': 'KRI022503'}, 'children': []}, {'member': {'name': 'Mahesh', 'memberID': 'KRI022505'}, 'children': []}]}
     //alert(trr)
-    document.getElementById("genealogyRoot").innerHTML = generateTree(tree)
+        tree = {{ tree|safe }};
+    document.getElementById("genealogyRoot").innerHTML = generateTree(tree);
+
+    $(document).ready(function () {
+        $('.genealogy-tree').on('click', '.tree-node', function (e) {
+            e.stopPropagation();  // prevent parent handlers
+            let childUl = $(this).closest('li').children('ul');
+            if (childUl.length) {
+                childUl.toggle('fast');
+            }
+        });
+    });
     </script>
     {% comment %} <script>
         
