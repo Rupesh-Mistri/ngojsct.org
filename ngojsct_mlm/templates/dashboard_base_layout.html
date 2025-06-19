@@ -6,7 +6,6 @@
   <title>Donation Slip</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-
   <style>
     body {
       overflow-x: hidden;
@@ -23,6 +22,21 @@
     }
     #sidebar.collapsed {
       margin-left: -250px;
+    }
+    @media (max-width: 768px) {
+      #sidebar {
+        position: fixed;
+        z-index: 1030;
+        top: 56px; /* navbar height */
+        left: 0;
+        height: calc(100% - 56px);
+      }
+      #sidebar.collapsed {
+        margin-left: -250px;
+      }
+      .content {
+        padding: 15px;
+      }
     }
     .sidebar-link {
       padding: 12px 20px;
@@ -50,73 +64,66 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
   </style>
-
   {% block head_part %}{% endblock head_part %}
 </head>
 <body>
   <!-- Navbar -->
-  <nav class="navbar navbar-light bg-white">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white">
     <div class="container-fluid">
-      <button class="btn" id="toggle-btn">
+      <button class="btn " id="toggle-btn">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <img src="{% static 'images/logo_rect.png' %}" class="img-fluid" style="max-height: 60px;" alt="Logo">
-      <!-- <span class="navbar-brand mb-0 h1">Donation Slip</span> -->
-      <div class="dropdown d-flex">
+      <img src="{% static 'images/logo_rect.png' %}" class="img-fluid" style="max-height: 50px;" alt="Logo">
+
+      <div class="dropdown ms-auto">
         <a href="javascript:void(0)" data-bs-toggle="dropdown" class="nav-link leading-none d-flex align-items-center">
-            <img src="/static/images/new2.png" alt="profile-user" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+          <img src="/static/images/new2.png" alt="profile-user" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
         </a>
         <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-            <div class="drop-heading text-center p-2">
-            <h6 class="text-dark mb-0 fs-6 fw-semibold">{{user.applicant_name}}</h6>
-            <small class="text-muted">{{user.email}}</small>
-            </div>
-            <div class="dropdown-divider m-0"></div>
-            <a class="dropdown-item" href="/profile">
+          <div class="drop-heading text-center p-2">
+            <h6 class="text-dark mb-0 fs-6 fw-semibold">{{ user.applicant_name }}</h6>
+            <small class="text-muted">{{ user.email }}</small>
+          </div>
+          <div class="dropdown-divider m-0"></div>
+          <a class="dropdown-item" href="/profile">
             <i class="bi bi-person me-2"></i> Profile
-            </a>
-            <a class="dropdown-item" href="/logout" >
+          </a>
+          <a class="dropdown-item" href="/logout">
             <i class="bi bi-box-arrow-right me-2"></i> Sign out
-            </a>
+          </a>
         </div>
+      </div>
     </div>
   </nav>
 
   <div class="d-flex">
     <!-- Sidebar -->
-    <div id="sidebar">
+    <div id="sidebar" class="d-lg-block collapsed">
       <div class="p-3">
-        <!--<div class="text-center mb-3">
-          <img src="logo_rect.png" class="img-fluid" style="max-height: 75px;" alt="Logo">
-        </div>  -->
-       <!-- <a href="#" class="sidebar-link">🏠 Dashboard</a>
-        <a href="#" class="sidebar-link">👤 Profile</a>
-        <a href="#" class="sidebar-link">📊 Level Data</a>
-        <a href="#" class="sidebar-link">💳 Withdrawal</a>
-        <a href="#" class="sidebar-link">📝 Slips List</a>
-        <a href="#" class="sidebar-link">🚪 Logout</a> -->
         <a href="/dashboard" class="sidebar-link"><i class="bi bi-house"></i> Dashboard</a>
-<a href="/profile" class="sidebar-link"><i class="bi bi-person"></i> Profile</a>
-<a href="/level_data" class="sidebar-link"><i class="bi bi-bar-chart"></i> Level Data</a>
-<a href="#" class="sidebar-link"><i class="bi bi-credit-card"></i> Withdrawal</a>
-<a href="/donation_slip_list" class="sidebar-link"><i class="bi bi-journal-text"></i> Slips List</a>
-<a href="/logout" class="sidebar-link"><i class="bi bi-box-arrow-right"></i> Logout</a>
+        <a href="/profile" class="sidebar-link"><i class="bi bi-person"></i> Profile</a>
+        <a href="/level_data" class="sidebar-link"><i class="bi bi-bar-chart"></i> Level Data</a>
+        <a href="#" class="sidebar-link"><i class="bi bi-credit-card"></i> Withdrawal</a>
+        <a href="/donation_slip_list" class="sidebar-link"><i class="bi bi-journal-text"></i> Slips List</a>
+        <a href="/logout" class="sidebar-link"><i class="bi bi-box-arrow-right"></i> Logout</a>
       </div>
     </div>
 
     <!-- Main content -->
     <div class="content flex-grow-1">
       <div class="main-content">
-            {% block content %}{% endblock content %}
+        {% block content %}{% endblock content %}
       </div>
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    document.getElementById('toggle-btn').addEventListener('click', function() {
-      document.getElementById('sidebar').classList.toggle('collapsed');
+    const toggleBtn = document.getElementById('toggle-btn');
+    const sidebar = document.getElementById('sidebar');
+    toggleBtn.addEventListener('click', function() {
+      sidebar.classList.toggle('collapsed');
     });
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
