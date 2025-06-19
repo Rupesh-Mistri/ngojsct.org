@@ -94,26 +94,27 @@
         align-items: center;
      
         position: relative;
-        z-index: 10;
+        z-index: 100;
     }
 
     .stamp_signature img {
-        width: 120px;
+        width: 350px;
         height: 120px;
         position: absolute;
        
-        transform: translate(-50%, -50%);
+        transform: translate(-60%, -50%);
         z-index: 100;
     }
 
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 {% endblock head_part %}
-{% block body %}
+{% block content %}
 <div id="page-container" class="container-fluid mt-4">
    <div class="dashboard-card">
       <h5>Donation Slip</h5>
-      <div class="header-container">
+      <div id="donation_slip">
+      <div class="header-container" >
          <div class="row align-items-center">
             <div class="col-auto">
                <img src="/static/images/logo_rect.png" alt="Logo" class="logo" />
@@ -171,5 +172,53 @@
          <!---->
       </div>
    </div>
+   <div class="text-end mb-2">
+  {% comment %} <button class="btn btn-sm btn-success" onclick="downloadSlip()">Download Donation Slip PDF</button> {% endcomment %}
 </div>
-{% endblock body %}
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+function downloadPDF() {
+
+      const idCardElement = document.querySelector('#donation_slip');
+
+      const options = {
+
+          margin: 0,
+
+          filename: 'ID_Card.pdf',
+
+          image: {
+
+              type: 'jpeg',
+
+              quality: 0.98
+
+          },
+
+          html2canvas: {
+
+              scale: 2
+
+          },
+
+          jsPDF: {
+
+              unit: 'in',
+
+              format: 'a4',
+
+              orientation: 'portrait'
+
+          }
+
+      };
+
+      html2pdf().set(options).from(idCardElement).save();
+
+  }
+</script>
+
+{% endblock content %}

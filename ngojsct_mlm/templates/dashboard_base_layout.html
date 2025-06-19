@@ -1,102 +1,122 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE|default:'en' }}">
-    <head>
-        <meta charset="UTF-8">
-        <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <!-- CSRF Token -->
-        <meta name="csrf-token" content="{{ csrf_token }}">
-        <title>{{current_url}}</title>
-        <link rel="shortcut icon" type="image/x-icon" href="{% static 'images/brand/logo32x32.png' %}" />
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Donation Slip</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
-        <link id="style" href="{% static 'plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
+  <style>
+    body {
+      overflow-x: hidden;
+      background: #f1f3f5;
+    }
+    #sidebar {
+      min-width: 250px;
+      max-width: 250px;
+      background: #fff;
+      transition: margin 0.3s;
+      border-right: 1px solid #dee2e6;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+      min-height: 100vh;
+    }
+    #sidebar.collapsed {
+      margin-left: -250px;
+    }
+    .sidebar-link {
+      padding: 12px 20px;
+      display: block;
+      color: #495057;
+      font-weight: 500;
+      border-radius: 0.375rem;
+      transition: background 0.2s;
+    }
+    .sidebar-link:hover {
+      background: #e9ecef;
+      text-decoration: none;
+    }
+    .content {
+      padding: 20px;
+    }
+    .main-content {
+      border: 1px solid #dee2e6;
+      padding: 30px;
+      background: #fff;
+      border-radius: 0.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .navbar {
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+  </style>
 
-        {% block head_part %}{% endblock %}
-        <!-- STYLE CSS -->
-        <link href="{% static 'css/style.css' %}" rel="stylesheet" />
-        <link href="{% static 'css/dark-style.css' %}" rel="stylesheet" />
-        <link href="{% static 'css/transparent-style.css' %}" rel="stylesheet">
-        <link href="{% static 'css/skin-modes.css' %}" rel="stylesheet" />
-        <link href="{% static 'css/icons.css' %}" rel="stylesheet" />
-        {% comment %} <link rel="stylesheet" href="{% static 'css/toastr.min.css' %}"> {% endcomment %}
-        {% block page_css %}{% endblock %}
-    </head>
-
-    <body class="app sidebar-mini ltr light-mode">
-    <div id="global-loader">
-        <img src="{% static 'images/loader.svg' %}" class="loader-img" alt="Loader">
-    </div>
-
-    <div class="page">
-        <div class="page-main">
-
-            {% include 'dashboard_header.html' %}
-            {% include 'dashboard_sidebar.html' %}
-
-            <div class="main-content app-content mt-0">
-                <div class="side-app">
-
-                    {% block body %}{% endblock body %}
-
-                </div>
+  {% block head_part %}{% endblock head_part %}
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-light bg-white">
+    <div class="container-fluid">
+      <button class="btn" id="toggle-btn">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <img src="{% static 'images/logo_rect.png' %}" class="img-fluid" style="max-height: 60px;" alt="Logo">
+      <!-- <span class="navbar-brand mb-0 h1">Donation Slip</span> -->
+      <div class="dropdown d-flex">
+        <a href="javascript:void(0)" data-bs-toggle="dropdown" class="nav-link leading-none d-flex align-items-center">
+            <img src="/static/images/new2.png" alt="profile-user" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+        </a>
+        <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+            <div class="drop-heading text-center p-2">
+            <h6 class="text-dark mb-0 fs-6 fw-semibold">{{user.applicant_name}}</h6>
+            <small class="text-muted">{{user.email}}</small>
             </div>
+            <div class="dropdown-divider m-0"></div>
+            <a class="dropdown-item" href="/profile">
+            <i class="bi bi-person me-2"></i> Profile
+            </a>
+            <a class="dropdown-item" href="/logout" >
+            <i class="bi bi-box-arrow-right me-2"></i> Sign out
+            </a>
         </div>
     </div>
-    {% block modal %}{% endblock %}
-    <a href="#top" id="back-to-top"><i class="fa fa-angle-up"></i></a>
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'plugins/bootstrap/js/popper.min.js' %}"></script>
-    <script src="{% static 'plugins/bootstrap/js/bootstrap.min.js' %}"></script>
-    {% block page_js %}{% endblock %}
+  </nav>
 
-
-    {% comment %} {% include 'admin_footer.html' %} {% endcomment %}
-<footer class="footer">
-    <div class="container">
-        <div class="row align-items-center flex-row-reverse">
-            <div class="col-md-12 col-sm-12 text-center">
-                Copyright © <span id="year1">2021</span> <a href="javascript:void(0)"></a>. <a href="javascript:void(0)">
-                    {% comment %} {% if account.company_logo %}
-                        <img class="logo" src="{{ account.company_logo }}" alt="">
-                    {% else %}
-                        <h3 class="logotext">{{ account.company_name }}</h3>
-                    {% endif %} {% endcomment %}
-                    <h3 class="logotext">{{ COMPANY_NAME }}</h3>
-                </a> All rights reserved.
-            </div>
-        </div>
+  <div class="d-flex">
+    <!-- Sidebar -->
+    <div id="sidebar">
+      <div class="p-3">
+        <!--<div class="text-center mb-3">
+          <img src="logo_rect.png" class="img-fluid" style="max-height: 75px;" alt="Logo">
+        </div>  -->
+       <!-- <a href="#" class="sidebar-link">🏠 Dashboard</a>
+        <a href="#" class="sidebar-link">👤 Profile</a>
+        <a href="#" class="sidebar-link">📊 Level Data</a>
+        <a href="#" class="sidebar-link">💳 Withdrawal</a>
+        <a href="#" class="sidebar-link">📝 Slips List</a>
+        <a href="#" class="sidebar-link">🚪 Logout</a> -->
+        <a href="/dashboard" class="sidebar-link"><i class="bi bi-house"></i> Dashboard</a>
+<a href="/profile" class="sidebar-link"><i class="bi bi-person"></i> Profile</a>
+<a href="/level_data" class="sidebar-link"><i class="bi bi-bar-chart"></i> Level Data</a>
+<a href="#" class="sidebar-link"><i class="bi bi-credit-card"></i> Withdrawal</a>
+<a href="/donation_slip_list" class="sidebar-link"><i class="bi bi-journal-text"></i> Slips List</a>
+<a href="/logout" class="sidebar-link"><i class="bi bi-box-arrow-right"></i> Logout</a>
+      </div>
     </div>
-</footer>
 
-</div>
+    <!-- Main content -->
+    <div class="content flex-grow-1">
+      <div class="main-content">
+            {% block content %}{% endblock content %}
+      </div>
+    </div>
+  </div>
 
-<script src="{% static 'js/sticky.js' %}"></script>
-<script src="{% static 'plugins/sidebar/sidebar.js' %}"></script>
-<script src="{% static 'plugins/p-scroll/perfect-scrollbar.js' %}"></script>
-<script src="{% static 'plugins/p-scroll/pscroll.js' %}"></script>
-<script src="{% static 'plugins/p-scroll/pscroll-1.js' %}"></script>
-<script src="{% static 'plugins/sidemenu/sidemenu.js' %}"></script>
-<script src="{% static 'js/flot.js' %}"></script>
-<script src="{% static 'js/index1.js' %}"></script>
-<script src="{% static 'js/themeColors.js' %}"></script>
-<script src="{% static 'js/custom.js' %}"></script>
-<script src="{% static 'js/toastr.min.js' %}"></script>
-{% comment %}  {% endcomment %}
-
-
-
-    {% block bottom_js %}{% endblock %}
-    {% if messages %}
-        {% for message in messages %}
-            <script type="text/javascript">
-                {% if message.tags == 'success' %}
-                    toastr.success("{{ message }}", { timeOut: "50000" });
-                {% elif message.tags == 'error' %}
-                    toastr.warning("{{ message }}", { timeOut: "50000" });
-                {% endif %}
-            </script>
-        {% endfor %}
-    {% endif %}
-    </body>
+  <script>
+    document.getElementById('toggle-btn').addEventListener('click', function() {
+      document.getElementById('sidebar').classList.toggle('collapsed');
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

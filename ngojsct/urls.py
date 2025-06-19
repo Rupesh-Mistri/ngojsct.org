@@ -39,7 +39,7 @@ urlpatterns = [
     path('donation_slip_list/',donation_slip_list,name='donation_slip_list'),
     path('donation_slip/<id>/',donation_slip,name='donation_slip'),
     # path('donation_slip/<int:pk>/', donation_slip, name='donation_slip_detail'),
-    path('level_data/<id>/', level_data, name='member_tree'),
+    path('level_data/', level_data, name='member_tree'),
     path('profile/', profile, name='profile'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

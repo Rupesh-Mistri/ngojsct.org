@@ -384,7 +384,7 @@
 
 </style>
 {% endblock head_part %}
-{% block body %}
+{% block content %}
 <div class="body genealogy-body genealogy-scroll" >
     <h1 class="page-title">Member Tree </h1>
         <div class="genealogy-tree">
@@ -444,22 +444,11 @@ function generateTree(node) {
     return html;
 }
 
-   // tree = {{tree|safe}}
- //   console.log(tree)
+    tree = {{tree|safe}}
+    console.log(tree)
     //trr={'member': {'name': 'Kristina', 'memberID': 'KRISTINA'}, 'children': [{'member': {'name': 'Rupesh', 'memberID': 'KRI022502'}, 'children': [{'member': {'name': 'Mobile', 'memberID': 'KRI022504'}, 'children': []}]}, {'member': {'name': 'Laptop', 'memberID': 'KRI022503'}, 'children': []}, {'member': {'name': 'Mahesh', 'memberID': 'KRI022505'}, 'children': []}]}
     //alert(trr)
-        tree = {{ tree|safe }};
-    document.getElementById("genealogyRoot").innerHTML = generateTree(tree);
-
-    $(document).ready(function () {
-        $('.genealogy-tree').on('click', '.tree-node', function (e) {
-            e.stopPropagation();  // prevent parent handlers
-            let childUl = $(this).closest('li').children('ul');
-            if (childUl.length) {
-                childUl.toggle('fast');
-            }
-        });
-    });
+    document.getElementById("genealogyRoot").innerHTML = generateTree(tree)
     </script>
     {% comment %} <script>
         
@@ -503,4 +492,4 @@ function generateTree(node) {
     
     </script> {% endcomment %}
     
-{% endblock body %}
+{% endblock content %}
