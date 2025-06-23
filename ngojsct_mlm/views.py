@@ -95,7 +95,8 @@ def register_view(request):
 
                 # Login the user
                 user = member.user_detail
-                user.backend = 'cmsapp.backends.CustomUserAuthenticationBackend'
+                print('User:', user)
+                # user.backend = 'cmsapp.backends.CustomUserAuthenticationBackend'
                 login(request, user)
 
                 return redirect('dashboard')
@@ -353,8 +354,16 @@ def dashboard(request):
     level_income=LevelIncomeDistributionModel.objects.filter(referrer=member_dtl.id).aggregate(total=Sum('income'))['total'] or 0
     total_no_of_member_reffered= MemberModel.objects.filter(sponser_member=user_id).count()
     position_income=FundDistributionModel.objects.filter(member_id=user_id).first()
+    if position_income:
+        position_income = position_income.amount
+    else:
+        position_income = 0
+    total_balance= level_income+ position_income
+    
     return render(request,'dashboard.html',
-                  {'level_income':level_income,'member_dtl':member_dtl,'total_no_of_member_reffered':total_no_of_member_reffered,'position_income':position_income}
+                  {'level_income':level_income,'member_dtl':member_dtl,'total_no_of_member_reffered':total_no_of_member_reffered,'position_income':position_income
+                   
+                   ,'total_balance':total_balance}
                   )
 
 

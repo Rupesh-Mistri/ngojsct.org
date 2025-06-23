@@ -20,6 +20,19 @@
             font-weight: bold;
             color: #007bff;
         }
+        .details-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 0px;
+            margin-bottom: 20px;
+            text-align: center;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .member_id{
+          color:red;
+        }
     </style>
     <script src=
     "https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js">
@@ -28,6 +41,16 @@
 
 {% block content %}
 <div id="page-container" class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="details-card">
+                Member ID:
+                <span class="member_id"> {% if member_dtl.user_detail.memberID %} {{ member_dtl.user_detail.memberID }}{% else %}NA{% endif %}</span>
+            </div>
+        </div>
+      
+      </div>
+
     <div class="row">
         <div class="col-md-4">
             <div class="dashboard-card">
@@ -44,7 +67,7 @@
         <div class="col-md-4">
           <div class="dashboard-card">
               <h5>Total Balance</h5>
-              <span> {% if balance_calculation.total_balance %} {{ balance_calculation.total_balance }}{% else %}0{% endif %}</span>
+              <span> {% if total_balance %} {{ total_balance }}{% else %}0{% endif %}</span>
           </div>
       </div>
      
