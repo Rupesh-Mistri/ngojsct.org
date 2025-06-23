@@ -97,9 +97,9 @@ def register_view(request):
                 user = member.user_detail
                 print('User:', user)
                 # user.backend = 'cmsapp.backends.CustomUserAuthenticationBackend'
-                login(request, user)
+                # login(request, user)
 
-                return redirect('dashboard')
+                return redirect('login')
 
             else:
                 messages.error(request, "This sponsor ID is not valid")
