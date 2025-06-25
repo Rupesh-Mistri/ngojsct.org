@@ -406,7 +406,7 @@ def build_tree(id):
     # Query for children where the current member is the sponsor
     children = MemberModel.objects.filter(sponser_member_id=member.id)
     tree = {
-        'member': {'name':member.applicant_name,'memberID':user.memberID,'rank':member.rank},
+        'member': {'name':member.applicant_name,'memberID':user.memberID,'rank':member.rank,'is_active':member.is_active},
         'children': []
     }
 
