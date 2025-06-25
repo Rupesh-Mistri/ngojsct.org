@@ -1,0 +1,94 @@
+{% extends "dashboard_base_layout.html" %}
+{% block head_part %}
+    <style>
+        .dashboard-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .dashboard-card h5 {
+            font-size: 1.25rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .dashboard-card span {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .details-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 0px;
+            margin-bottom: 20px;
+            text-align: center;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .member_id{
+          color:red;
+        }
+    </style>
+    <script src=
+    "https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js">
+      </script>
+{% endblock head_part %}
+
+{% block content %}
+<div id="page-container" class="container-fluid mt-4">
+    <div class="row">
+      
+      </div>
+
+    <div class="row">
+      
+        <div class="col-md-12">
+          <div class="dashboard-card">
+              <h5>Total Balance</h5>
+              <span> {% if total_balance %} {{ total_balance }}{% else %}0{% endif %}</span>
+          </div>
+      </div>
+     
+       
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+          <div class="dashboard-card">
+              <h5>Money Trasfer</h5>
+              <form method="post" action="/money_transfer">
+                  {% csrf_token %}
+                  <div class="form-group" >
+                        <label for="amount">Amount:</label>
+                        <input type="number" class="form-control" id="amount" name="amount" required>
+                        <label for="recipient">Recipient Member ID:</label>
+                        {% comment %} <input type="text" class="form-control" id="recipient" name="recipient" required> {% endcomment %}
+                        {% comment %} <select name="member" class="form-select">
+  {% for option in dropdown_options %}
+    <option value="{{ option.value }}">{{ option.label }}</option>
+  {% endfor %}
+</select> {% endcomment %}
+
+               <div class="dropdown-wrapper" data-dropdown>
+                  <input type="text" class="form-control dropdown-input" placeholder="Search...">
+                  <ul class="dropdown-list ">
+                     <li>Detect Location</li>
+                    <li><img src="/static/dashboard/images/funding-logo.png" style="width:1em;height:1em"> Education</li>
+                    <li>Healthcare </li>
+                    <li>Environment</li>
+                    <li>Animal Welfare</li>
+                  </ul>
+                </div>
+                        <button type="submit" class="btn btn-primary mt-3">Transfer</button>
+              </div>
+          </div>
+      </div>
+  </div>
+    
+</div>
+{% endblock content %}

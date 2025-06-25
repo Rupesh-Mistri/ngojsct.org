@@ -385,7 +385,7 @@
 </style>
 {% endblock head_part %}
 {% block content %}
-<div class="body genealogy-body genealogy-scroll" >
+<div class="body genealogy-body genealogy-scroll drag-scroll" >
     <h1 class="page-title">Member Tree </h1>
         <div class="genealogy-tree">
             <ul id="genealogyRoot">
@@ -535,4 +535,42 @@
     
     </script> {% endcomment %}
     
+<script>
+  const dragScroll = document.querySelector('.drag-scroll');
+  let isDragging = false;
+  let startX, startY;
+  let scrollLeft, scrollTop;
+
+  dragScroll.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    dragScroll.classList.add('active');
+    startX = e.pageX - dragScroll.offsetLeft;
+    startY = e.pageY - dragScroll.offsetTop;
+    scrollLeft = dragScroll.scrollLeft;
+    scrollTop = dragScroll.scrollTop;
+  });
+
+  dragScroll.addEventListener('mouseleave', () => {
+    isDragging = false;
+    dragScroll.classList.remove('active');
+  });
+
+  dragScroll.addEventListener('mouseup', () => {
+    isDragging = false;
+    dragScroll.classList.remove('active');
+  });
+
+  dragScroll.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - dragScroll.offsetLeft;
+    const y = e.pageY - dragScroll.offsetTop;
+    const walkX = (x - startX) * 1.5; // scroll speed X
+    const walkY = (y - startY) * 1.5; // scroll speed Y
+    dragScroll.scrollLeft = scrollLeft - walkX;
+    dragScroll.scrollTop = scrollTop - walkY;
+  });
+</script>
+
+
 {% endblock content %}

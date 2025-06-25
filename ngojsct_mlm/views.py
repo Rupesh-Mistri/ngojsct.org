@@ -427,3 +427,41 @@ def profile(request):
     user_details = request.user  # Use Django's built-in user handling
     member_details = MemberModel.objects.filter(user_detail_id=user_details.id).first()
     return render(request, 'profile.html', {'member_details': member_details})
+
+
+from django.db.models import Sum, F, Value as V, DecimalField
+from django.db.models.functions import Coalesce
+
+@login_req
+def wallet(request):
+    user = request.user
+    aggregates = WalletModel.objects.filter(member_id=user.id).aggregate(
+        credited=Coalesce(Sum('credited'), V(0), output_field=DecimalField()),
+        debited=Coalesce(Sum('debited'), V(0), output_field=DecimalField()),
+    )
+    total_balance = aggregates['credited'] - aggregates['debited']
+    dropdown_options = build_flat_tree(id=request.user.id)
+    return render(request, 'wallet.html', {'total_balance': total_balance,'dropdown_options': dropdown_options})
+
+
+
+def build_flat_tree(id, depth=0, result=None):
+    if result is None:
+        result = []
+
+    user = CustomUser.objects.filter(id=id).first()
+    member = MemberModel.objects.filter(id=id).first()
+
+    if not member or not user:
+        return result
+
+    label = f"{'--' * depth} {member.applicant_name} ({user.memberID})"
+    result.append({'value': user.memberID, 'label': label})
+
+    # Get direct children of this member (sponsored members)
+    children = MemberModel.objects.filter(sponser_member_id=member.id)
+
+    for child in children:
+        result = build_flat_tree(child.id, depth + 1, result)
+
+    return result

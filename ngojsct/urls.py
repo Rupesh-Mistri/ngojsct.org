@@ -41,6 +41,8 @@ urlpatterns = [
     # path('donation_slip/<int:pk>/', donation_slip, name='donation_slip_detail'),
     path('level_data/', level_data, name='member_tree'),
     path('profile/', profile, name='profile'),
+
+    path('wallet/', wallet, name='wallet'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

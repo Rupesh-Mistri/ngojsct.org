@@ -204,3 +204,18 @@ class DonationsModel(models.Model):
     
     class Meta:
         db_table="tbl_donation"
+
+
+class WalletModel(models.Model):
+    member = models.ForeignKey('MemberModel', on_delete=models.CASCADE)
+    credited = models.DecimalField(max_digits=20, decimal_places=2, default=0.00)
+    debited = models.DecimalField(max_digits=20, decimal_places=2, default=0.00)
+    created_at = models.DateTimeField(default=now)  # Default to current time
+    updated_at = models.DateTimeField(auto_now=True)  # Automatically update on save
+    status = models.IntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.member.applicant_name} - {self.balance}"
+
+    class Meta:
+        db_table = "tbl_wallet"
