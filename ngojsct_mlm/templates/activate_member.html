@@ -85,15 +85,14 @@
     <div class="row">
       <div class="col-md-12">
           <div class="dashboard-card">
-              <h5>Money Trasfer</h5>
-              <form method="post" action="/wallet/">
+              <h5>Activate Member</h5>
+              <form method="post" action="/activate_member/">
                   {% csrf_token %}
            <div class="mb-3">
-  <label for="amount" class="form-label">Amount:</label>
-  <input type="number" class="form-control" id="credited" name="credited" required>
+
 </div>
 
-<div class="mb-3">
+{% comment %} <div class="mb-3">
   <label for="recipient" class="form-label">Recipient Member ID:</label>
   <select name="member" id="recipient" class="form-select select2" required>
     <option value="">Select</option>
@@ -101,22 +100,19 @@
       <option value="{{ option.value }}">{{ option.label }}</option>
     {% endfor %}
   </select>
-</div>
+</div> {% endcomment %}
 
 
 
-               {% comment %} <div class="dropdown-wrapper" data-dropdown>
-                  <input type="text" class="form-control dropdown-input" placeholder="Search...">
+                <div class="dropdown-wrapper" data-dropdown>
+                  {% comment %} <input type="text" class="form-control dropdown-input" placeholder="Search..."> {% endcomment %}
                   <ul class="dropdown-list ">
                      
                    {% for option in dropdown_options %}
-                   <li align="left">{{ option.label }}</li>
+                   <li align="left"><input type="checkbox" id="id_{{option.value}}" name="member_id" value="{{ option.value }}"><label for="id_{{option.value}}">{{ option.label }}</label></li>
                    {% endfor %}
-                    <li>Healthcare </li>
-                    <li>Environment</li>
-                    <li>Animal Welfare</li> 
                   </ul>
-                </div>  {% endcomment %}
+                </div>  
 
 
       {% comment %} <script>
@@ -183,7 +179,7 @@
          document.querySelectorAll('[data-dropdown]').forEach(setupDropdown);
        </script> {% endcomment %}
 
-                        <button type="submit" class="btn btn-primary mt-3">Transfer</button>
+                        <button type="submit" class="btn btn-primary mt-3">Activate</button>
               </div>
           </div>
       </div>

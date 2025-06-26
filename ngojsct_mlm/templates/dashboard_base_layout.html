@@ -7,6 +7,7 @@
   <title>Donation Slip</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+      <link href="https://rawgit.com/select2/select2/master/dist/css/select2.min.css" rel="stylesheet" />
   <style>
     body {
       overflow-x: hidden;
@@ -71,6 +72,33 @@
   {% block head_part %}{% endblock head_part %}
 </head>
 <body>
+{% for message in messages %} 
+    
+    <div class="alert {% if message.tags == 'success' %} alert-success {% elif message.tags == 'error' %}  alert-danger  {% elif message.tags == 'info' %} alert alert-info  {% elif message.tags == 'warning' %} alert-warning {% endif %} alert-dismissible text-center elpuru_alert_desapp" 
+        role="alert" 
+        style="position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 1050; width: 50%;" 
+        id="alertm"
+        >
+        {{ message }}
+    </div>
+
+{% endfor %}
+
+<script>
+setTimeout(function() {
+    
+    var alerts = document.getElementsByClassName('elpuru_alert_desapp');
+    
+    // Loop through each alert and fade it out
+    for (var i = 0; i < alerts.length; i++) {
+        var alert = alerts[i];
+        alert.style.opacity = 0; 
+        alert.classList.remove('show'); // Remove the 'show' class for Bootstrap fade-out effect
+        alert.classList.add('fade'); // Add the 'fade' class for smooth transition
+    }
+}, 5000); 
+</script>
+
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-light bg-white">
     <div class="container-fluid">
@@ -108,6 +136,7 @@
         {% if user.is_superuser %}
         <a href="/wallet" class="sidebar-link"><i class="bi bi-wallet"></i> Wallet</a>
         {% endif %}
+        <a href="/activate_member" class="sidebar-link"><i class="bi bi-person-plus"></i> Activate Member</a>
         <a href="/profile" class="sidebar-link"><i class="bi bi-person"></i> Profile</a>
         <a href="/level_data" class="sidebar-link"><i class="bi bi-bar-chart"></i> Level Data</a>
         <a href="#" class="sidebar-link"><i class="bi bi-credit-card"></i> Withdrawal</a>
@@ -132,5 +161,29 @@
       sidebar.classList.toggle('collapsed');
     });
   </script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script src="https://rawgit.com/select2/select2/master/dist/js/select2.js"></script>
+   <script>
+        $(document).ready(function() {
+         $('.select2').select2();
+     });
+   </script> 
+
+     {% comment %} <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var select2Elements = document.querySelectorAll('.select2');
+      for (var i = 0; i < select2Elements.length; i++) {
+        var select2Element = select2Elements[i];
+        select2Element.addEventListener("change", function() {
+          // Handle change event
+        });
+        new Select2(select2Element, {
+          // Configuration options
+        });
+      }
+    });
+    
+  </script>  {% endcomment %}
 </body>
 </html>

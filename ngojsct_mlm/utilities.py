@@ -67,14 +67,15 @@ def table_body_gen(data_list, model,html_table_header):
 #             # If not logged in, redirect to login page
 #             return redirect('/login')
 #     return wrapper
+from functools import wraps
+from django.shortcuts import redirect
 
-
-def login_req(function):
+def login_req(view_func):
+    @wraps(view_func)
     def wrapper(request, *args, **kwargs):
-        print('request.user.is_authenticated',request.user.is_authenticated)
         if not request.user.is_authenticated:
-            return redirect('/login/')
-        return function(request, *args, **kwargs)
+            return redirect('login')  # Or your login URL name
+        return view_func(request, *args, **kwargs)
     return wrapper
 
 def is_connected_to_internet():

@@ -409,14 +409,21 @@
         // Check if the node has a member object
         if (node.member) {
             let member = node.member;
+            if (!member.is_active) {
+                color = 'blue';
+                avtart='{% static 'images/new2.png' %}'
+            } else {
+                color='green';
+                avtart='{% static 'images/green_avatar.png' %}'
+            }
             html += '<div class="member-header">';
             html += '<span>Member</span>';
             html += '</div>';
             html += '<div class="member-image">';
-            html += '<img src="' + '{% static 'images/new2.png' %}'  + '" alt="">';
+            html += '<img src="' +  avtart + '" alt="">';
             html += '</div>';
             html += '<div class="member-footer">';
-            html += '<p class="name" style="color:blue">' + member.name + '<br><b>' + member.memberID + '</b><br><b>' + member.rank + '</b></p>';
+            html += `<p class="name" style="color:${color}">` + member.name + '<br><b>' + member.memberID + '</b><br><b>' + member.rank + '</b></p>';
             html += '<div class="downline"><span></span></div>';
             html += '</div>';
         } else {

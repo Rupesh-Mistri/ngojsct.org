@@ -43,6 +43,7 @@ urlpatterns = [
     path('profile/', profile, name='profile'),
 
     path('wallet/', wallet, name='wallet'),
+    path('activate_member/', activate_member, name='activate_member'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

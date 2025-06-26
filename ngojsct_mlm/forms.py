@@ -107,3 +107,14 @@ class MemberLoginForm(forms.Form):
         super(MemberLoginForm, self).__init__(*args, **kwargs)
         self.fields['username'].widget = forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Email or Member ID'})
         self.fields['password'].widget = forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'})
+
+
+class WalletModelForm(forms.ModelForm):
+    class Meta:
+        model = WalletModel
+        fields = ['credited','member',]
+
+    def __init__(self, *args, **kwargs):
+        super(WalletModelForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({'class': 'form-control'})
