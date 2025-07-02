@@ -10,7 +10,7 @@ from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 import json
 from .utilities import login_req
-# Create your views here.
+from decimal import Decimal
 
 from django.contrib.auth import get_user_model
 
@@ -435,41 +435,74 @@ from django.db.models.functions import Coalesce
 @login_req
 def wallet(request):
     user = request.user
+
     aggregates = WalletModel.objects.filter(member_id=user.id).aggregate(
-        credited=Coalesce(Sum('credited'), V(0), output_field=DecimalField()),
-        debited=Coalesce(Sum('debited'), V(0), output_field=DecimalField()),
+        credited=Coalesce(Sum('credited'), Decimal(0), output_field=DecimalField()),
+        debited=Coalesce(Sum('debited'), Decimal(0), output_field=DecimalField()),
     )
     total_balance = aggregates['credited'] - aggregates['debited']
-    dropdown_options = build_flat_tree(id=request.user.id)
+
+    dropdown_options = build_flat_tree(id=user.id)  # For transfer recipient select
 
     if request.method == 'POST':
         credited = request.POST.get('credited')
-        member = request.POST.get('member')
-        if total_balance < float(credited):
-            messages.error(request, "Insufficient balance to transfer this amount.")
-            return redirect('wallet')
-        form= WalletModelForm(request.POST)
-        if form.is_valid():
-            wallet_entry = form.save(commit=False)
-            wallet_entry.member_id = member
-            wallet_entry.credited = credited
-            wallet_entry.debited = 0.00
-            wallet_entry.save()
-            debited= WalletModel.objects.create(
-                member_id=user.id,
-                credited=0.00,
-                debited=credited,
-                # reason='Amount Credited',
+
+        # If Transfer button clicked
+        if 'transfer_btn' in request.POST and user.is_superuser==False:
+            member = request.POST.get('member')
+
+            if not member:
+                messages.error(request, "Please select a recipient member.")
+                return redirect('wallet')
+
+            try:
+                credited_amount = Decimal(credited)
+            except:
+                messages.error(request, "Invalid amount entered.")
+                return redirect('wallet')
+
+            if total_balance < credited_amount:
+                messages.error(request, "Insufficient balance to transfer this amount.")
+                return redirect('wallet')
+
+            # Credit to recipient
+            WalletModel.objects.create(
+                member_id=member,
+                credited=credited_amount,
+                debited=Decimal(0),
             )
-            messages.success(request, "Amount transfered successfully!")
+
+            # Debit from sender
+            WalletModel.objects.create(
+                member_id=user.id,
+                credited=Decimal(0),
+                debited=credited_amount,
+            )
+
+            messages.success(request, "Amount transferred successfully!")
             return redirect('wallet')
 
-        else:
-            print(form.errors)
-            messages.error(request, "Invalid form submission. Please try again.")
-        
-    return render(request, 'wallet.html', {'total_balance': total_balance,'dropdown_options': dropdown_options})
+        # If Add Fund button clicked
+        elif 'fund_add_btn' in request.POST and user.is_superuser==True:
+            try:
+                credited_amount = Decimal(credited)
+            except:
+                messages.error(request, "Invalid amount entered.")
+                return redirect('wallet')
 
+            WalletModel.objects.create(
+                member_id=user.id,
+                credited=credited_amount,
+                debited=Decimal(0),
+            )
+
+            messages.success(request, "Funds added successfully!")
+            return redirect('wallet')
+
+    return render(request, 'wallet.html', {
+        'total_balance': total_balance,
+        'dropdown_options': dropdown_options
+    })
 
 
 def build_flat_tree(id, depth=0, result=None):
@@ -496,6 +529,12 @@ def build_flat_tree(id, depth=0, result=None):
 def activate_member(request):
     user_dtl = request.user
     dropdown_options = build_flat_tree(id=request.user.id)
+    aggregates = WalletModel.objects.filter(member_id=user_dtl.id).aggregate(
+        credited=Coalesce(Sum('credited'), Decimal(0), output_field=DecimalField()),
+        debited=Coalesce(Sum('debited'), Decimal(0), output_field=DecimalField()),
+    )
+    total_balance = aggregates['credited'] - aggregates['debited']
+
     if request.method == 'POST':
         member_id = request.POST.get('member_id')
         print('Member ID:', member_id)
@@ -522,4 +561,4 @@ def activate_member(request):
             messages.success(request, f"Member {member.applicant_name} activated successfully.")
         else:
             messages.error(request, "Member not found.")
-    return render(request, 'activate_member.html',{'dropdown_options':dropdown_options})
+    return render(request, 'activate_member.html',{'dropdown_options':dropdown_options,'total_balance':total_balance})
