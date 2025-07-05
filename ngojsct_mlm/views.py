@@ -378,7 +378,9 @@ def logout_view(request):
 def donation_slip_list(request):
     user=request.user
     user_id=user.id
-    donation_list=DonationsModel.objects.filter(member_id=user_id)
+    member_dtl= MemberModel.objects.filter(user_detail_id=user_id).first()
+    print('Member Details:', member_dtl.id)
+    donation_list=DonationsModel.objects.filter(member_id=member_dtl.id)
     return render(request,'donation_slip_list.html',{'donation_list':donation_list})
 
 def donation_slip(request,id):
@@ -386,7 +388,7 @@ def donation_slip(request,id):
     Renders the donation slip page.
     """
     slip_dtl=DonationsModel.objects.filter(id=id).first()
-    member_dtl=MemberModel.objects.filter(id=slip_dtl.id).first()
+    member_dtl=MemberModel.objects.filter(id=slip_dtl.member_id).first()
     return render(request, 'donation_slip.html',{'slip_dtl':slip_dtl,'member_dtl':member_dtl})
 
 @login_req
