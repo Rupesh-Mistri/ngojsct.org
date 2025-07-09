@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 
 from ngojsct_website.views import *
 from ngojsct_mlm.views import *
+from ngojsct_mlm.razorpay_views import *
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
@@ -44,6 +45,13 @@ urlpatterns = [
 
     path('wallet/', wallet, name='wallet'),
     path('activate_member/', activate_member, name='activate_member'),
+
+    ### Phonepe and Razorpay urls
+    path('checkout/', CheckoutView.as_view(), name='checkout'),
+    path('initiate-payment/', InitiatePaymentView.as_view(), name='initiate_payment'),
+    path('callback/', PaymentCallbackView.as_view(), name='callback'),
+    path('payment-receipt/<int:id>/', PaymentReceiptView.as_view(), name='payment_receipt'),
+
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -161,3 +161,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')  # Adjusted to use 'media' folder
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL= 'ngojsct_mlm.CustomUser'
+
+RAZORPAY_KEY_ID='rzp_test_czVBox2pv42V6z'
+RAZORPAY_SECRET_KEY='oJcXpkLGfgRuvRpHO8USFDtH'
+
+RAZORPAY_CALLBACK_URL = '/callback/'#'http://127.0.0.1:3000/payment-verify/'

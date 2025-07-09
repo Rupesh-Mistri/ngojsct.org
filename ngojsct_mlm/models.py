@@ -219,3 +219,30 @@ class WalletModel(models.Model):
 
     class Meta:
         db_table = "tbl_wallet"
+
+
+class PaymentRequestDetailsModel(models.Model):
+    request_text                    =   models.TextField()
+    success_status                  =   models.BooleanField()
+    payemnt_code                    =   models.CharField(max_length=50, null=False)
+    message                         =   models.CharField(max_length=50, null=False)
+    merchantId                      =   models.CharField(max_length=50, null=False)
+    merchantTransactionId           =   models.CharField(max_length=50, null=False)
+    instrumentResponse_type         =   models.CharField(max_length=50, null=False)
+    instrumentResponse_redirect     =   models.TextField( null=False)
+    method_type                     =   models.CharField(max_length=50, null=False)
+    checksum                        =   models.TextField()
+    amount                          =   models.DecimalField(max_digits=10, decimal_places=2)
+    member                          =   models.ForeignKey("MemberModel", on_delete=models.CASCADE ,null=True,blank=True)
+    # ngo                          =   models.ForeignKey("NgoModel", on_delete=models.CASCADE ,null=True,blank=True)
+    # campaign                          =   models.ForeignKey("CampaignModel", on_delete=models.CASCADE ,null=True,blank=True)
+    pay_for                        =   models.CharField(max_length=50, null=False, )
+    name                            = models.CharField(max_length=255, blank=True, null=True)
+    email                           = models.EmailField(blank=True, null=True)
+    mobile                           = models.CharField(max_length=20, blank=True, null=True)
+    is_indian                       = models.BooleanField(default=True)
+    # make_donation_anonymous         = models.BooleanField(default=False)
+    # receive_whatsapp_updates         = models.BooleanField(default=False)
+    # tip_amount                          = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    class Meta:
+        db_table = "tbl_payment_requets_det"
