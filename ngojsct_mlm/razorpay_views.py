@@ -13,7 +13,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import PaymentRequestDetailsModel #, PaymentResponseDetailsModel, CustomUser  # Ensure Order and Product models are defined
+from .models import PaymentRequestDetailsModel,MemberModel , PaymentResponseDetailsModel #, CustomUser  # Ensure Order and Product models are defined
 
 client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
 # FRONTEND_HOST = "http://127.0.0.1:3000"
@@ -22,48 +22,56 @@ client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRE
 class CheckoutView(View):
     permission_classes = [AllowAny]
 
-    def get(self, request):
+    def get(self, request,id):
+        member_details=MemberModel.objects.filter(id=id).first()
         # return Response({"message": "Checkout page loaded"}, status=200)
-        return render(request, "checkoutview.html",)
+        return render(request, "checkoutview.html",{'member_details':member_details})
 
 @method_decorator(csrf_exempt,name='dispatch')
 class InitiatePaymentView(View):
-    def post(self, request,):
-        
+    def post(self, request,id):
+        print('ididii',id)
 
         order_data = {
-            "amount": 1000,
+            "amount": 155100, #In paisa
             "currency": "INR",
             "payment_capture": 1,
         }
-
+        
         razorpay_order = client.order.create(order_data)
-        # print(razorpay_order)
+        print(razorpay_order)
         # Save order in your DB
-        # PaymentRequestDetailsModel.objects.create(
-        #     request_text   =     razorpay_order          
-        #     success_status =     True     
-        #     payemnt_code   =                 
-        #     message                       
-        #     merchantId                    
-        #     merchantTransactionId         
-        #     instrumentResponse_type       
-        #     instrumentResponse_redirect   
-        #     method_type                   
-        #     checksum                      
-        #     amount         =       razorpay_order["amount"] / 100,  # Convert to rupees       
-        #     member         =             
-        #     # ngo                         
-        #     # campaign                    
-        #     pay_for                       
-        #     name                          
-        #     email                         
-        #     mobile                        
-        #     is_indian                     
-        #     # make_donation_anonymous     
-        #     # receive_whatsapp_updates    
-        #     # tip_amount                  
-        # )
+        PaymentRequestDetailsModel.objects.create(
+            request_text   =     razorpay_order   ,       
+            success_status =     True     ,
+            # payemnt_code   =  
+            payment_gatway_name= 'Razorpay'  ,             
+            # message                       
+            # merchantId                    
+            # merchantTransactionId         
+            # instrumentResponse_type       
+            # instrumentResponse_redirect   
+            # method_type                   
+            # checksum                      
+            amount         =       razorpay_order["amount"] / 100,  # Convert to rupees   
+            attempts        =       razorpay_order["attempts"],
+            member_id         =           id  ,
+            # ngo                         
+            # campaign                    
+            pay_for       =         'Registration'   ,      
+            currency        =       'INR',
+            # name                          
+            # email                         
+            # mobile                        
+            is_indian        = True   ,
+            order_id        =          razorpay_order["id"],
+            # make_donation_anonymous     
+            # receive_whatsapp_updates    
+            # tip_amount          
+            status                  =      razorpay_order["status"],  
+        )
+
+        # update_status=MemberModel.objects.filter()
 
         return JsonResponse({
             "order_id": razorpay_order["id"],
@@ -104,7 +112,19 @@ class PaymentCallbackView(View):
                 # order.razorpay_signature = signature
                 # order.is_paid = True
                 # order.save()
-                return JsonResponse({"status": "success"})
+                check_req=PaymentRequestDetailsModel.objects.filter(order_id=order_id).first()
+                if check_req:
+                    payment_response_create_db=PaymentResponseDetailsModel.objects.create(
+                        member_id=check_req.member_id,
+                        request_text  =   data    ,
+                        razorpay_payment_id  = payment_id,
+                        razorpay_order_id    = order_id,
+                        razorpay_signature   = signature
+                    )
+                    update_status=MemberModel.objects.filter(id=check_req.member_id).update(status=2)
+                    if update_status:
+                        return redirect(f'/payment-receipt/{payment_response_create_db.id}')
+                # return JsonResponse({"status": "success"})
             except razorpay.errors.SignatureVerificationError:
                 # order.is_paid = False
                 # order.save()

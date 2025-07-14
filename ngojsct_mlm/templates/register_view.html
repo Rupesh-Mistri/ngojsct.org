@@ -114,7 +114,7 @@
       </div>
 
       <div class="mt-4">
-        <form method="post">
+        <form method="post" id="id_form">
           {% csrf_token %}
 
           <div class="row">
@@ -151,7 +151,8 @@
 
           <!-- Submit button -->
           <div class="d-grid">
-            <button type="submit" class="btn btn-primary">Register</button>
+            <button type="submit" class="btn btn-primary">Register and Pay</button>
+            {% comment %} <button id="rzp-button1" class="btn btn-primary">Pay Now 1551</button> {% endcomment %}
           </div>
 
           <!-- Forgot password link -->
@@ -266,5 +267,74 @@
       });
       
   </script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+document.getElementById("rzp-button1").addEventListener("click", async function (e) {
+    e.preventDefault();
+
+    const id_form = document.getElementById('id_form');
+    const formData = new FormData(id_form);
+    let hasEmptyField = false;
+
+    // Basic validation: Check for empty required fields
+    for (let [key, value] of formData.entries()) {
+        const input = document.getElementById('id_' + key);
+        if (input && input.hasAttribute('required') && !value.trim()) {
+            input.classList.add('is-invalid');
+            hasEmptyField = true;
+        } else if (input) {
+            input.classList.remove('is-invalid');
+        }
+    }
+
+    if (hasEmptyField) {
+        alert("Please fill all required fields before proceeding to payment.");
+        return;
+    }
+
+    try {
+        let response = await fetch(`/initiate-payment/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify(Object.fromEntries(formData))
+        });
+
+        if (!response.ok) {
+            alert("Failed to initiate payment. Please try again.");
+            return;
+        }
+
+        let data = await response.json();
+
+        var options = {
+            "key": data.razorpay_key_id,
+            "amount": data.amount,
+            "currency": "INR",
+            "name": data.product_name ?? "Product",
+            "description": "Registration Payment",
+            "order_id": data.order_id,
+            "callback_url": data.razorpay_callback_url,
+            "prefill": {
+                "name": data.user_name ?? "",
+                "email": data.user_email ?? "",
+                "contact": data.user_phone ?? ""
+            },
+            "theme": {
+                "color": "#6a11cb"
+            }
+        };
+
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+    } catch (error) {
+        console.error("Error during payment initiation:", error);
+        alert("An error occurred. Please try again.");
+    }
+});
+</script>
+
   </body>
 </html>

@@ -47,8 +47,8 @@ urlpatterns = [
     path('activate_member/', activate_member, name='activate_member'),
 
     ### Phonepe and Razorpay urls
-    path('checkout/', CheckoutView.as_view(), name='checkout'),
-    path('initiate-payment/', InitiatePaymentView.as_view(), name='initiate_payment'),
+    path('checkout/<id>', CheckoutView.as_view(), name='checkout'),
+    path('initiate-payment/<id>/', InitiatePaymentView.as_view(), name='initiate_payment'),
     path('callback/', PaymentCallbackView.as_view(), name='callback'),
     path('payment-receipt/<int:id>/', PaymentReceiptView.as_view(), name='payment_receipt'),
 

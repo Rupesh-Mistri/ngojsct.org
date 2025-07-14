@@ -98,7 +98,8 @@ def register_view(request):
                 print('User:', user)
                 # user.backend = 'cmsapp.backends.CustomUserAuthenticationBackend'
                 # login(request, user)
-
+                if member.status==1:
+                     return redirect(f'/checkout/{member.id}')
                 return redirect('login')
 
             else:

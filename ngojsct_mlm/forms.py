@@ -34,7 +34,7 @@ class MemberRegistrationForm(forms.ModelForm):
             choices=[('', 'Select')] + [(data.name, data.name) for data in CityModel.objects.filter(status=1)],
             attrs={'class': 'form-control'}
         )
-        self.fields['user_type'].widget = forms.Select(attrs={'class': 'form-control','placeholder': 'Enter your area',},choices=[ (' ', 'Select'),
+        self.fields['user_type'].widget = forms.Select(attrs={'class': 'form-control','placeholder': 'Enter your area','required':'required'},choices=[ (' ', 'Select'),
         ('Individual', 'Individual'),
         ('Organisation', 'Organisation'),])
         self.fields['address'].widget = forms.Textarea(attrs={'class': 'form-control','rows':2})
