@@ -12,7 +12,7 @@ import razorpay
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-
+import datetime
 from .models import PaymentRequestDetailsModel,MemberModel , PaymentResponseDetailsModel #, CustomUser  # Ensure Order and Product models are defined
 
 client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
@@ -119,11 +119,12 @@ class PaymentCallbackView(View):
                         request_text  =   data    ,
                         razorpay_payment_id  = payment_id,
                         razorpay_order_id    = order_id,
-                        razorpay_signature   = signature
+                        razorpay_signature   = signature,
+                        created_at          = datetime.datetime.now(),
                     )
-                    update_status=MemberModel.objects.filter(id=check_req.member_id).update(status=2)
+                    update_status=MemberModel.objects.filter(id=check_req.member_id).update(status=2,is_active=True)
                     if update_status:
-                        return redirect(f'/payment-receipt/{payment_response_create_db.id}')
+                        return redirect(f'/payment-receipt/{payment_response_create_db.razorpay_order_id}')
                 # return JsonResponse({"status": "success"})
             except razorpay.errors.SignatureVerificationError:
                 # order.is_paid = False
@@ -135,33 +136,43 @@ class PaymentCallbackView(View):
             return JsonResponse({"status": "error", "message": str(e)}, status=500)
 
 
+import logging
+from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse, HttpResponseServerError
+from django.views import View
+
+from .models import PaymentResponseDetailsModel
+
+logger = logging.getLogger(__name__)
+
 class PaymentReceiptView(View):
-    permission_classes = [AllowAny]
-
-    def get(self, request, order_id):
-        try:
-            reponse = get_object_or_404(PaymentResponseDetailsModel, razorpay_order_id=order_id)
-            user = reponse.user
-
-            payment_status = "PAID" if reponse.is_paid else "UNPAID"
-
-            return Response({
+    def get(self, request, id):
+        if True:
+        # try:
+            response = get_object_or_404(PaymentResponseDetailsModel, razorpay_order_id=id)
+            # user = response.user
+            request_pymt=get_object_or_404(PaymentRequestDetailsModel, order_id=id)
+            payment_status = "PAID" #if response.is_paid else "UNPAID"
+            data = {
                 "receipt": {
-                    "order_id": reponse.razorpay_order_id,
-                    "payment_id": reponse.razorpay_payment_id,
+                    "order_id": response.razorpay_order_id,
+                    "payment_id": response.razorpay_payment_id,
                     "status": payment_status,
-                    "amount": int(reponse.amount * 100),
-                    "product": reponse.product.name,
+                    # "amount": int(response.amount * 100),
+                    # "product": response.product.name,
                 },
-                "user": {
-                    "name": getattr(user, "name", user.username),
-                    "email": user.email,
-                }
-            }, status=200)
+                "request_pymt":request_pymt
+                # "user": {
+                #     "name": getattr(user, "name", getattr(user, "username", "")),
+                #     "email": user.email,
+                # }
+            }
+            return render(request, 'payment_receipt_view.html', data)
 
-        except Exception as e:
-            logging.error(f"Error in fetching receipt: {e}")
-            return Response({"error": "Unable to fetch receipt"}, status=500)
+        # except Exception as e:
+        #     logger.error(f"Error in fetching receipt: {e}")
+        #     return HttpResponseServerError("Unable to fetch receipt")
+
 
 
 

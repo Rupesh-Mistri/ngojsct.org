@@ -1,0 +1,141 @@
+<html lang="en" dir="ltr">
+  <head>
+    <!-- META DATA -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Sash – Bootstrap 5 Admin &amp; Dashboard Template">
+    <meta name="author" content="Spruko Technologies Private Limited">
+    <meta name="keywords" content="admin, admin dashboard, admin panel, admin template, bootstrap, clean, dashboard, flat, jquery, modern, responsive, premium admin templates, responsive admin, ui, ui kit.">
+
+    <!-- FAVICON -->
+    <link rel="shortcut icon" type="image/x-icon" href="/static/assets/images/brand/favicon.ico">
+    <!-- TITLE -->
+    <title>Registration</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+      /* Custom styles for the registration page */
+     body {
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+        height: 100vh;
+        {% comment %} display: flex;
+        justify-content: center;
+        align-items: center; {% endcomment %}
+        margin: 0;
+        font-family: Arial, sans-serif;
+      }
+
+      .container {
+        max-width: 600px;
+        margin-top: 50px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+      }
+
+      h3 {
+        font-weight: bold;
+        color: #343a40;
+        margin-bottom: 20px;
+      }
+
+      .header-brand-img {
+        height: 50px;
+        width: 50px;
+        margin-bottom: 30px;
+      }
+
+      .form-label {
+        font-weight: 500;
+        color:rgb(0, 0, 0);
+      }
+
+      .form-control {
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        box-shadow: none;
+        transition: border-color 0.3s ease;
+      }
+
+      .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
+      }
+
+      .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        font-size: 16px;
+        padding: 12px;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+      }
+
+      .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #004085;
+      }
+
+      .text-muted {
+        color: #6c757d;
+        text-decoration: none;
+      }
+
+      .text-muted:hover {
+        text-decoration: underline;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .popover {
+        max-width: 250px;
+        font-size: 14px;
+      }
+
+      .error-message {
+        color: #ed314c;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="text-center">
+        {% comment %} <h4><img src="/static/front/images/logo.png" width="150" alt="Logo" class="header-brand-img"></h4> {% endcomment %}
+        <h3>Payment For Registration</h3>
+      </div>
+
+      <div class="mt-4">
+<div class="container p-4">
+  <div class="login-card mx-auto">
+    
+    <h3>Payment {{ product.name }}</h3>
+    <p>Amount : ₹{{ request_pymt.amount }}</p>
+    <p>Applicant Name:{{ request_pymt.member.applicant_name  }}</p>
+    <p>Phone Number:{{ request_pymt.member.phone_number }}</p>
+    <p>Order ID:{{ receipt.order_id }}</p>
+    <p>Payment ID:{{ receipt.payment_id }}</p>
+    <p>Status:{{ receipt.status }}</p>
+    <div class="text-center">
+    {% if user.id %}
+    <a href= "/dashboard"  class="btn btn-primary">Go To Dashboard</a>
+    {% else %}
+    <a href="/login" >Go To Login</a>
+    {% endif %}
+    </div>
+  </div>
+</div>
+      </div>
+    </div>
+
+
+  </body>
+</html>

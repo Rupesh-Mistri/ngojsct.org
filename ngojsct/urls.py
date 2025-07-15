@@ -50,7 +50,7 @@ urlpatterns = [
     path('checkout/<id>', CheckoutView.as_view(), name='checkout'),
     path('initiate-payment/<id>/', InitiatePaymentView.as_view(), name='initiate_payment'),
     path('callback/', PaymentCallbackView.as_view(), name='callback'),
-    path('payment-receipt/<int:id>/', PaymentReceiptView.as_view(), name='payment_receipt'),
+    path('payment-receipt/<id>/', PaymentReceiptView.as_view(), name='payment_receipt'),
 
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

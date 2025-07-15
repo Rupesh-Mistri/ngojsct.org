@@ -35,7 +35,10 @@ def login_view(request):
             if user_obj:
                 user = authenticate(request, email=user_obj.email, password=password)
                 if user:
+                    member=MemberModel.objects.filter(user_detail_id=user.id).first()
                     login(request, user)
+                    if user.is_superuser == False and member.status==1:
+                        return redirect(f'/checkout/{member.id}')
                     return redirect('dashboard')
                 else:
                     form.add_error(None, 'Invalid credentials')
@@ -528,7 +531,7 @@ def build_flat_tree(id, depth=0, result=None):
         result = build_flat_tree(child.id, depth + 1, result)
 
     return result
-
+@login_req
 def activate_member(request):
     user_dtl = request.user
     dropdown_options = build_flat_tree(id=request.user.id)
@@ -544,8 +547,7 @@ def activate_member(request):
         member = MemberModel.objects.filter(user_detail__id=member_id).first()
         
         if member:
-            member.is_active = True
-            member.save()
+
 
             debited= WalletModel.objects.create(
                 member_id=user_dtl.id,
@@ -560,6 +562,9 @@ def activate_member(request):
                 debited=0.00,
                 # reason='Amount Credited',
             )
+            member.is_active = True
+            member.status=2
+            member.save()
 
             messages.success(request, f"Member {member.applicant_name} activated successfully.")
         else:
