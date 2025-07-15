@@ -1,8 +1,8 @@
 # from rest_framework.views import APIView
 from django.views import View
-from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
-from rest_framework import status
+# from rest_framework.response import Response
+# from rest_framework.permissions import AllowAny
+# from rest_framework import status
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.conf import settings
@@ -20,7 +20,7 @@ client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRE
 
 
 class CheckoutView(View):
-    permission_classes = [AllowAny]
+    # permission_classes = [AllowAny]
 
     def get(self, request,id):
         member_details=MemberModel.objects.filter(id=id).first()
