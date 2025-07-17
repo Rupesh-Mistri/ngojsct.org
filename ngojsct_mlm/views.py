@@ -37,9 +37,10 @@ def login_view(request):
                 if user:
                     member=MemberModel.objects.filter(user_detail_id=user.id).first()
                     login(request, user)
-                    if user.is_superuser == False and member.status==1:
+                    if user.is_superuser == False and member.mode_of_payment=='Online':
                         return redirect(f'/checkout/{member.id}')
-                    return redirect('dashboard')
+                    else:
+                        return redirect('dashboard')
                 else:
                     form.add_error(None, 'Invalid credentials')
             else:
@@ -101,9 +102,10 @@ def register_view(request):
                 print('User:', user)
                 # user.backend = 'cmsapp.backends.CustomUserAuthenticationBackend'
                 # login(request, user)
-                if member.status==1:
+                if member.mode_of_payment=='Online':
                      return redirect(f'/checkout/{member.id}')
-                return redirect('login')
+                else:
+                    return redirect('login')
 
             else:
                 messages.error(request, "This sponsor ID is not valid")

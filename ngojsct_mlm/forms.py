@@ -11,12 +11,12 @@ class MemberRegistrationForm(forms.ModelForm):
         model = MemberModel
         fields = [
             'senior_ID', 'senior_Name',  'applicant_name','phone_number',
-            'state', 'city', 'pincode','address','user_type' #'registration_fee'
+            'state', 'city', 'pincode','address','user_type','mode_of_payment' #'registration_fee'
         ]
 
     def __init__(self, *args, **kwargs):
         super(MemberRegistrationForm, self).__init__(*args, **kwargs)
-
+        
         # Apply common form-control class
         for field in self.fields:
             if field not in ['password', 'password1']:
@@ -38,6 +38,10 @@ class MemberRegistrationForm(forms.ModelForm):
         ('Individual', 'Individual'),
         ('Organisation', 'Organisation'),])
         self.fields['address'].widget = forms.Textarea(attrs={'class': 'form-control','rows':2})
+        self.fields['mode_of_payment'].widget = forms.Select(attrs={'class': 'form-control','placeholder': 'Enter your area','required':'required'},choices=[ (' ', 'Select'),
+        ('Offline', 'Offline'),
+        ('Online', 'Online'),])
+
         self.fields = OrderedDict([
     ('senior_ID', self.fields['senior_ID']),
     ('senior_Name', self.fields['senior_Name']),
@@ -51,9 +55,10 @@ class MemberRegistrationForm(forms.ModelForm):
     ('state', self.fields['state']),
     ('city', self.fields['city']),
     ('pincode', self.fields['pincode']),
+    ('mode_of_payment', self.fields['mode_of_payment']),
     # ('registration_fee', self.fields['registration_fee']),
 ])
-
+    
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if CustomUser.objects.filter(email=email).exists():
