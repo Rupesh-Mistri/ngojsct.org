@@ -1,0 +1,106 @@
+{% extends "dashboard_base_layout.html" %}
+{% block head_part %}
+    <style>
+        .dashboard-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .dashboard-card h5 {
+            font-size: 1.25rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .dashboard-card span {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .details-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 0px;
+            margin-bottom: 20px;
+            text-align: center;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .member_id{
+          color:red;
+        }
+    </style>
+    <section class="category-section pt-2">
+      {% comment %} <style>
+         .dropdown-list {
+           border: 1px solid #ccc;
+           max-height: 150px;
+           overflow-y: auto;
+           position: absolute;
+           background-color: white;
+           width: fit-content;
+           display: none;
+           z-index: 1000;
+           border-radius: 10px;
+         }
+         .dropdown-list li {
+            cursor: pointer;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+          }
+          
+         .dropdown-list li:hover {
+           background-color: #f0f0f0;
+         }
+       </style> {% endcomment %}
+
+    <script src=
+    "https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js">
+      </script>
+{% endblock head_part %}
+
+{% block content %}
+<div id="page-container" class="container-fluid mt-4">
+    <div class="row">
+      
+      </div>
+
+    <div class="row">
+      <div class="col-md-12">
+          <div class="dashboard-card">
+              <h5>Deactivate Member</h5>
+              <form method="post" action="/activate_member/">
+                  {% csrf_token %}
+           <div class="mb-3">
+
+</div>
+
+
+
+
+
+                <div class="dropdown-wrapper" data-dropdown>
+                  {% comment %} <input type="text" class="form-control dropdown-input" placeholder="Search..."> {% endcomment %}
+                  <ul class="dropdown-list ">
+                     
+                   {% for option in dropdown_options %}
+                   <li align="left"><input type="checkbox" id="id_{{option.value}}" name="member_id" value="{{ option.value }}"><label for="id_{{option.value}}">{{ option.label }}</label></li>
+                   {% endfor %}
+                  </ul>
+                </div>  
+
+
+
+                        <button type="submit" class="btn btn-primary mt-3">Dectivate</button>
+              </div>
+          </div>
+      </div>
+  </div>
+    
+</div>
+{% endblock content %}

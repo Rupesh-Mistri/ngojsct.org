@@ -572,3 +572,47 @@ def activate_member(request):
         else:
             messages.error(request, "Member not found.")
     return render(request, 'activate_member.html',{'dropdown_options':dropdown_options,'total_balance':total_balance})
+
+
+@login_req
+def deactivate_member(request):
+    user_dtl = request.user
+    dropdown_options = build_flat_tree(id=request.user.id)
+    # aggregates = WalletModel.objects.filter(member_id=user_dtl.id).aggregate(
+    #     credited=Coalesce(Sum('credited'), Decimal(0), output_field=DecimalField()),
+    #     debited=Coalesce(Sum('debited'), Decimal(0), output_field=DecimalField()),
+    # )
+    # total_balance = aggregates['credited'] - aggregates['debited']
+
+    if request.method == 'POST':
+        member_id = request.POST.get('member_id')
+        print('Member ID:', member_id)
+        member = MemberModel.objects.filter(user_detail__id=member_id).first()
+        
+        if member:
+
+
+            # debited= WalletModel.objects.create(
+            #     member_id=user_dtl.id,
+            #     credited=0.00,
+            #     debited=1551.00,
+            #     # reason='Amount Credited',
+            # )
+
+            # credits= WalletModel.objects.create(
+            #     member_id=member_id,
+            #     credited=1551.00,
+            #     debited=0.00,
+            #     # reason='Amount Credited',
+            # )
+            member.is_active = False
+            member.status=0
+            member.save()
+
+            messages.success(request, f"Member {member.applicant_name} activated successfully.")
+        else: 
+            messages.error(request, "Member not found.")
+    return render(request, 'deactivate_member.html',{'dropdown_options':dropdown_options,})
+    
+
+

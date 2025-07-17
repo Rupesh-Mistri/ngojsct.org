@@ -45,6 +45,7 @@ urlpatterns = [
 
     path('wallet/', wallet, name='wallet'),
     path('activate_member/', activate_member, name='activate_member'),
+    path('deactivate_member/', deactivate_member, name='deactivate_member'),
 
     ### Phonepe and Razorpay urls
     path('checkout/<id>', CheckoutView.as_view(), name='checkout'),
