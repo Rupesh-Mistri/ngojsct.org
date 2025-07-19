@@ -402,7 +402,7 @@ def level_data(request):
     user=request.user
     user_id=user.id
     tree= build_tree(user_id)
-    print(tree)
+    # print(tree)
     return render(request,'level_data.html',{'tree':json.dumps(tree)})
 
 def build_tree(id):
@@ -454,15 +454,15 @@ def wallet(request):
 
     if request.method == 'POST':
         credited = request.POST.get('credited')
-
+        print('hgjfdsg')
         # If Transfer button clicked
-        if 'transfer_btn' in request.POST and user.is_superuser==False:
+        if 'transfer_btn' in request.POST and user.is_superuser==True:
             member = request.POST.get('member')
-
+            print('hgjg')
             if not member:
                 messages.error(request, "Please select a recipient member.")
                 return redirect('wallet')
-
+            
             try:
                 credited_amount = Decimal(credited)
             except:
