@@ -1,0 +1,5 @@
+SELECT member_id, COALESCE(SUM(credited), 0) - COALESCE(SUM(debited), 0) AS total_balance FROM tbl_wallet GROUP BY member_id;
+
+SELECT * FROM `tbl_wallet` ORDER BY member_id ASC;
+
+-------------------

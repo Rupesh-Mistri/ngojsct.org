@@ -149,6 +149,9 @@
 .genealogy-tree {
     display: inline-block;
     min-width: 100%; /* Ensure the tree takes up the full width */
+
+    transform-origin: 0 0; /* Top-left scaling for consistent zooming */
+    transition: transform 0.2s ease-in-out;
 }
 
 .genealogy-tree ul {
@@ -392,7 +395,23 @@
                 
             </ul>
         </div>
+        <div id="zoomControls" style="
+    position: fixed;
+    top: 80%;
+    right: 25px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    z-index: 9999;
+">
+    <button id="zoomInBtn" class="btn btn-sm btn-primary">Zoom In</button>
+    <button id="zoomOutBtn" class="btn btn-sm btn-secondary">Zoom Out</button>
+    <button id="resetZoomBtn" class="btn btn-sm btn-warning">Reset</button>
+</div>
     </div>
+
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" ></script>
     <script src="{% static 'js/datatables.min.js' %}"></script>
     <script>
@@ -500,47 +519,7 @@
     //alert(trr)
     document.getElementById("genealogyRoot").innerHTML = generateTree(tree)
     </script>
-    {% comment %} <script>
-        
-       $(function () {
-        // Initially hide all submenus
-        $('.genealogy-tree ul').hide();
-        $('.genealogy-tree>ul').show();
-        $('.genealogy-tree ul.active').show();
-    
-        // Event listener for click events on tree items
-        $('.genealogy-tree li').on('click', function (e) {
-            var children = $(this).find('> ul');
-            if (children.is(":visible")) {
-                children.hide('fast').removeClass('active');
-            } else {
-                children.show('fast').addClass('active');
-            }
-    
-            // Instead of scrolling immediately, calculate the target scroll position
-            setTimeout(function() {
-                var scrollContainer = $('.genealogy-body');
-                var containerTop = scrollContainer.offset().top;
-                var scrollTo = $(this).offset().top - containerTop + scrollContainer.scrollTop() - (scrollContainer.height() / 2);
-                
-                // Animate the scroll to the calculated position
-                scrollContainer.animate({
-                    scrollTop: scrollTo
-                }, 'fast');
-            }.bind(this), 300); // Adjust the delay as needed to ensure animation timing
-    
-            e.stopPropagation();
-        });
-    
-        // Force horizontal scrollbar to be visible on load
-        $('.genealogy-scroll').each(function () {
-            if (this.scrollWidth > this.clientWidth) {
-                $(this).css('overflow-x', 'auto');
-            }
-        });
-    });
-    
-    </script> {% endcomment %}
+
     
 <script>
   const dragScroll = document.querySelector('.drag-scroll');
@@ -579,5 +558,77 @@
   });
 </script>
 
+{% comment %} <script>
+let scale = 1; // Initial scale
+
+const genealogyTree = document.querySelector('.genealogy-tree');
+const zoomInBtn = document.getElementById('zoomInBtn');
+const zoomOutBtn = document.getElementById('zoomOutBtn');
+const resetZoomBtn = document.getElementById('resetZoomBtn');
+
+zoomInBtn.addEventListener('click', () => {
+    scale += 0.1;
+    updateZoom();
+});
+
+zoomOutBtn.addEventListener('click', () => {
+    scale = Math.max(0.2, scale - 0.1); // Prevent zooming out too far
+    updateZoom();
+});
+
+resetZoomBtn.addEventListener('click', () => {
+    scale = 1;
+    updateZoom();
+});
+
+function updateZoom() {
+    genealogyTree.style.transform = `scale(${scale})`;
+}
+</script> {% endcomment %}
+<script>
+let scale = 1; // Initial scale
+
+const genealogyTree = document.querySelector('.genealogy-tree');
+const zoomInBtn = document.getElementById('zoomInBtn');
+const zoomOutBtn = document.getElementById('zoomOutBtn');
+const resetZoomBtn = document.getElementById('resetZoomBtn');
+
+zoomInBtn.addEventListener('click', () => {
+    scale += 0.1;
+    updateZoom();
+});
+
+zoomOutBtn.addEventListener('click', () => {
+    scale = Math.max(0.2, scale - 0.1); // Prevent zooming out too far
+    updateZoom();
+});
+
+resetZoomBtn.addEventListener('click', () => {
+    scale = 1;
+    updateZoom();
+});
+
+function updateZoom() {
+    genealogyTree.style.transform = `scale(${scale})`;
+}
+
+// Enable zoom with Ctrl + Mouse Scroll
+const genealogyScroll = document.querySelector('.genealogy-scroll');
+
+genealogyScroll.addEventListener('wheel', function(e) {
+    if (e.ctrlKey) { // Zoom only when Ctrl is pressed
+        e.preventDefault(); // Prevent default browser zoom
+        if (e.deltaY < 0) {
+            // Scroll up => Zoom In
+            scale += 0.05;
+        } else {
+            // Scroll down => Zoom Out
+            scale = Math.max(0.2, scale - 0.05);
+        }
+        updateZoom();
+    }
+}, { passive: false }); // Required to allow preventDefault
+
+</script>
 
 {% endblock content %}
