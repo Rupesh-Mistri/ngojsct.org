@@ -553,7 +553,7 @@ def activate_member(request):
 
             if total_balance < 1551:
                 messages.error(request, "Insufficient balance to transfer this amount.")
-                return redirect('wallet')
+                return redirect('activate_member')
             
 
             debited= WalletModel.objects.create(
