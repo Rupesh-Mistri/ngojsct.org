@@ -214,7 +214,8 @@ class WalletModel(models.Model):
     created_at = models.DateTimeField(default=now)  # Default to current time
     updated_at = models.DateTimeField(auto_now=True)  # Automatically update on save
     status = models.IntegerField(default=1)
-
+    member_whom_activated= models.ForeignKey('MemberModel',related_name='member_whom_activated', on_delete=models.CASCADE,null=True,blank=True,)
+    member_activated_by= models.ForeignKey('MemberModel',related_name='member_activated_by', on_delete=models.CASCADE,null=True,blank=True)
     def __str__(self):
         return f"{self.member.applicant_name} - {self.balance}"
 

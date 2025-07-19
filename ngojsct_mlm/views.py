@@ -560,14 +560,17 @@ def activate_member(request):
                 member_id=user_dtl.id,
                 credited=0.00,
                 debited=1551.00,
-                # reason='Amount Credited',
+                member_whom_activated=member_id,
+                member_activated_by=member_id,
             )
 
             credits= WalletModel.objects.create(
                 member_id=member_id,
                 credited=1551.00,
                 debited=0.00,
-                # reason='Amount Credited',
+                member_whom_activated=member_id,
+                member_activated_by=user_dtl.id,
+
             )
             member.is_active = True
             member.status=2
